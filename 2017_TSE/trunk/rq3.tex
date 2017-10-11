@@ -1,0 +1,29 @@
+%\begin{figure}[!htb]
+%\centering
+%
+%\includegraphics[scale=0.5]{boxplot.eps}
+%\caption{Contribution of $AML^{SPECTRA}$, $AML^{TEXT}$, and $AML^{BOTH}$}
+%\label{fig:boxplot}
+%\end{figure}
+
+\begin{table}[!htb]
+	\caption{Average Weights of Each Component }
+	\centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+    \textbf{Project} & $\textbf{AML}^\textbf{Text}$ & $\textbf{AML}^{\textbf{SuspWord}}$ & $\textbf{AML}^\textbf{Spectra}$ \\ \hline\hline
+AspectJ&-14.25&33.18&1.94\\\hline
+Ant&9.14&12.5&1.54\\\hline
+Lucene&12.43&25.77&-0.47\\\hline
+Rhino&2.79&1.44&1.81\\\hline
+    \end{tabular}
+    \label{tab:contributions}
+\end{table}
+
+%In this research question, we investigate the contributions of $AML^{SPECTRA}$, $AML^{TEXT}$, and $AML^{BOTH}$ to the overall performance of the whole approach. We consider the default setting of $AML$, i.e., $n=20$. Figure~\ref{fig:boxplot} is the box plot showing the distribution of weights assigned to $AML^{SPECTRA}$, $AML^{TEXT}$, and $AML^{BOTH}$ which correspond to the values of $\alpha$, $\beta$, and $\gamma$ respectively. From the figure, we can note that for most bugs, all of the components are given non-zero weights. This shows that each component is important for a good number of bugs. Also, $AML^{BOTH}$ is often given higher weights than the other two components. The median weights given to $AML^{BOTH}$ and $AML^{SPECTRA}$ are the same, however the third quartile of the weights given to $AML^{BOTH}$ is much higher than the third quartile of the weights given to $AML^{SPECTRA}$. The mean of the weights given to $AML^{BOTH}$, $AML^{SPECTRA}$ and $AML^{TEXT}$ are 0.41, 0.32, and 0.27, respectively. 
+
+%In this research question, we investigate the contribution of $\text{AML}^{\text{Text}}$, $\text{AML}^\text{SuspWord}$, and $\text{AML}^\text{Spectra}$ to the performance of AML in the context of the default setting (i.e., $n=10$). Table~\ref{tab:contributions} highlights the average weights of each AML component in the four projects.  From the Table~\ref{tab:contributions}, $\text{AML}^\text{SuspWord}$ has the highest weights than the other two components in AspectJ, Ant, and Lucene. For Rhino, $\text{AML}^\text{Text}$ has the highest weight (i.e., 2.79). Interestingly, according to Equation~\ref{eqn:composite}, component weights (i.e., $\alpha$, $\beta$, and $\gamma$) can be possible or negative numbers. From the table, AspectJ and Lucene are the two cases have negative component weights. Overall, we find that the component weights are well-tuned to maximize their contributions to the overall AML.
+
+%[say something about the negative weights later ...]
+We use default setting of AML ($n=10$) to evaluate contributions of component weights to the effectiveness of  AML. From Equation~\ref{eqn:composite}, we observe that component weights with large absolute values  have stronger influences on final suspiciousness scores of methods (i.e., $f(x_i, \theta)$), and near-zero weights have weaker influences on the suspiciousness scores. Based on our observation and the  result shown in Table~\ref{tab:contributions}, we find that average weights of AML$^\text{Text}$ and AML$^\text{SuspWord}$ in AspectJ, Ant, and Lucene are significantly larger than of AML$^\text{Spectra}$. This implies AML$^\text{Text}$ and AML$^\text{SuspWord}$ have stronger contribution to performance of AML than  AML$^\text{Spectra}$ in AspectJ, Ant, and Lucene. In Rhino, 
+AML$^\text{Text}$ has the largest average weight, and AML$^\text{SuspWord}$ has the smallest weight. However, their differences are not significant compared to their magnitudes. Therefore, contributions of the three components to AML in Rhino are  relatively equivalent. On the other hand, AML$^\text{Text}$ and AML$^\text{Spectra}$ have negative average weights in AspectJ and Lucene, respectively. From Equation~\ref{eqn:composite}, we  observe that the purpose of negative weights is to decrease suspiciousness scores of methods when their magnitudes are much larger from the actual suspiciousness. Therefore, negative weights of SW$^\text{Text}$ and AML$^\text{Spectra}$ are for adjusting suspiciousness scores of methods to converge their actual values as much as possible.

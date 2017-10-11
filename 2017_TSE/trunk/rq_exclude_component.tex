@@ -1,0 +1,59 @@
+%Table~\ref{tab:AML_variants} shows the performance of the three AML variants, and the full AML. From the table, the full AML has the best performance in term of Top 1, Top 5, Top 10, and MAP. This shows that omitting one of the AML components reduces the effectiveness of AML. Thus, {\em each of the component contributes towards the overall performance of AML}. Also, among the variants, {AML}$^{-\text{SuspWord}}$ has the smallest Top 1, Top 5, Top 10, and MAP scores. The reduction in the evaluation metric scores are the largest when we omit {AML}$^\text{SuspWord}$. This indicates that {AML}$^\text{SuspWord}$ {\em is more important than the other components of AML}.
+
+Table~\ref{tab:AML_variants} summarizes the results of our ablation test on both NetML and AML, each comparing the full model and three reduced variants (i.e., All$^{-\text{Text}}$, All$^{-\text{Text}}$ and All$^{-\text{Text}}$). It is evident that, for both NetML and AML,  the full model always performs better than the reduced variants. This suggests that each feature component plays an important role, and omitting one of them may greatly affect the modelling performance. Among the three variants, it can be seen that {All}$^{-\text{SuspWord}}$ yields the smallest Top 1, Top 5, Top 10, and MAP scores for both NetML and AML. This suggests that the SuspWord feature component is more important than the other two (i.e., Text and Spectra).
+
+Furthermore, comparing the results of NetML and AML, we can also observe that the former always gives a better, or at least equal, result than the latter. This suggests that the model parameterization using two sets of latent parameters (instead of one in AML), along with the objective function formulation that jointly optimizes bug localization error and fosters clustering of similar bug reports and methods, contribute to a better overall performance of NetML.
+
+
+\begin{table*}[t]
+	\caption{Contributions of feature components in NetML and AML}
+	\centering
+%    \begin{tabular}{|l|c|c|c|c|}
+%    \hline
+%    \textbf{Approach} & \textbf{Top 1} & \textbf{Top 5} & \textbf{Top 10}& \textbf{MAP}  \\\hline
+%    \hline
+%%{AML}$^\text{Text}$&14&37&53&0.116\\\hline
+%%{AML}$^\text{SuspWord}$&26&66&83&0.193\\\hline
+%%{AML}$^\text{Spectra}$&12&33&51&0.065\\\hline
+%%\hline
+%
+%{AML}$^{-\text{Text}}$ &28&68&87&0.212\\\hline
+%{AML}$^{-\text{SuspWord}}$&28&62&83&0.201\\\hline
+%{AML}$^{-\text{Spectra}}$&26&63&84&0.210\\\hline
+%\hline
+%{AML} &31&71&92&0.237\\\hline
+%
+%
+%%    {AML}$^{-\text{Text}}$ &0.212&28&68&87\\\hline
+%%  {AML}$^{-\text{SuspWord}}$  &0.201&28&62&83\\\hline
+%%   {AML}$^{-\text{Spectra}}$&0.210&26&63&84\\\hline
+%%  {Original AML}   &0.237&31&72&92\\\hline
+%%
+%    \end{tabular}
+
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+	\hline 
+	\multirow{2}{*}{\textbf{Approach}} & \multicolumn{2}{c|}{\textbf{Top 1}} & \multicolumn{2}{c|}{\textbf{Top 5}} & \multicolumn{2}{c|}{\textbf{Top 10}} & \multicolumn{2}{c|}{\textbf{MAP}}\tabularnewline
+	\cline{2-9} 
+	& \textbf{NetML} & \textbf{AML} & \textbf{NetML} & \textbf{AML} & \textbf{NetML} & \textbf{AML} & \textbf{NetML} & \textbf{AML}\tabularnewline
+	\hline 
+	\hline
+	All$^{-\text{Text}}$ & 68 (19.15\%)  & 61 (17.18\%) & 144 (40.56\%) & 130 (36.62\%) & 179 (50.42\%) & 165 (46.48\%) & 0.228 & 0.212\\
+	All$^{-\text{Spectra}}$ & 56 (15.77\%) & 49 (13.80\%) & 128 (36.06\%) & 112 (31.65\%) & 172 (48.45\%) & 157 (44.23\%) & 0.215 & 0.210\\
+	All$^{-\text{SuspWord}}$ & 74 (20.85\%) & 65 (18.31\%) & 156 (43.94\%) & 136 (38.31\%) & 196 (55.21\%) & 182 (51.27\%) & 0.211 & 0.229\\
+	\hline
+	All & \textbf{116} \textbf{(36.62\%)} & 88 (24.79\%) & \textbf{226} \textbf{(63.66\%)} & 179 (50.42\%) & \textbf{255} \textbf{(71.83\%)} & 213 (60.00\%) & \textbf{0.347} & 0.291\\
+	\hline 
+\end{tabular}
+
+    \label{tab:AML_variants}
+\end{table*}
+
+
+
+
+
+%Among the six variants,  {AML}$^{-\text{Text}}$ achieves the highest MAP, SC@1, SC@5, and SC@10 scores.
+%Furthermore, among single-component variants (i.e., {AML}$^{\text{Text}}$, {AML}$^{\text{SuspWord}}$, and  {AML}$^{\text{Spectra}}$), {AML}$^{\text{SuspWord}}$ has the best performance in term of Top 1, Top 5, Top 10, and MAP.Overall, our proposed AML outperforms all the variants, and AML$^{\text{SuspWord}}$ plays a key role in our approach.
+
+%Noticeably, $\text{AML}^{-\text{Spectra}}$ is equivalent to PROMESIR, but we apply Algorithm~\ref{alg:adaptive} to tune component weights instead of using brutal force approach. Therefore, there is a difference between MAP scores of  $\text{AML}^{-\text{SuspWord}}$ and PROMESIR in RQ1.  

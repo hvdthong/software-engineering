@@ -1,0 +1,45 @@
+%\begin{table}[t]
+%	\centering
+%	\caption{Adaptive vs. Non-Adaptive}
+%    \begin{tabular}{|c|c|c|c|c|}
+%    \hline
+%      \textbf{Setting}& {\textbf{SR@1}} &\textbf{SR@5} &\textbf{SR@10} & \textbf{MAP} \\
+%    \hline
+%      \textbf{Adaptive} &{17.83\%}&{43.95\%}&{54.78\%}&\multirow{2}{*}{0.218}\\
+%    ($AML$)   &(28)&(69)&(86)&\\\hline
+%  \textbf{Non-Adaptive} &{???\%}&{???\%}&{???\%}&\multirow{2}{*}{???}\\
+%	     ($AML_{*}$)  &(???)&(???)&(???)&\\\hline
+%
+%    
+%    \end{tabular}
+%    \label{tab:non_adaptive}
+%\end{table}
+
+
+\begin{table}[t]
+	\centering
+	\caption{Adaptive vs. Non-Adaptive}
+	\scalebox{0.95}{
+    \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+      \textbf{Project}& \textbf{Setting}&{\textbf{SR@1}} &\textbf{SR@5} &\textbf{SR@10} & \textbf{MAP} \\
+    \hline
+    \multirow{3}{*}{AspectJ} &$n=20$& 14.63\%&24.39\%&29.27\%&0.163   \\
+    &$n=35$&19.51\%&26.83\%&31.71\%&0.199\\ 
+    &$AML_{*}$&19.51\%&26.83\%&31.71\%&0.197\\\hline
+     \multirow{3}{*}{Ant}  &$n=20$  &15.09\%&39.62\%&58.49\%&0.220 \\ 
+&  $n=35$  &16.98\%&43.40\%&58.49\%&0.248\\
+        &$AML_{*}$&13.21\%&41.51\%&58.49\%&0.228\\\hline
+ \multirow{3}{*}{Lucene}& $n=20$ &29.73\%&64.86\%&75.68\%&0.284  \\ 
+&$n=35$ &29.73\%&62.16\%&70.27\%&0.280\\
+        &$AML_{*}$&29.73\%&62.16\%&70.27\%&0.280\\\hline
+    \multirow{3}{*}{Rhino}&$n=20$   &11.54\%&53.85\%&57.69\%&0.204\\
+    &$n=35$ &11.54\%&53.85\%&53.85\%&0.199\\
+     & $AML_{*}$   &11.54\%&53.85\%&53.85\%&0.199\\\hline
+    \textbf{ \multirow{3}{*}{Overall}}& $n=20$&17.83\%&43.95\%&54.78\%&0.218 \\
+   
+    &$n=35$ &19.75\%&45.22\%&53.50\%&0.234\\ 
+      &$AML_{*}$ &18.47\%&44.59\%&53.50\%&0.227\\\hline
+    \end{tabular}}
+    \label{tab:non_adaptive}
+\end{table}

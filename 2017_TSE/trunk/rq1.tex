@@ -1,0 +1,188 @@
+%\begin{table}[!htb]
+%	\centering
+%	\caption{Success-Rate@1: AML vs. Baselines.}
+%    \begin{tabular}{|c|cccc|}
+%    \hline
+%        \textbf{Project}&\textbf{AML} & \textbf{PROMESIR} & $\textbf{DIT}^\textbf{A}$ &$\textbf{DIT}^\textbf{B}$ \\
+%        \hline\hline
+%AspectJ&7&4&4&3\\
+%Ant&9&7&3&3\\
+%Lucene&11&8&7&7\\
+%Rhino&4&2&1&1\\
+%\hline\hline
+%\textbf{Overall}&31&21&15&14\\
+%         \hline
+%    \end{tabular}
+%    \label{tab:result_top_1}
+%\end{table}
+
+\begin{table*}[!t]
+	\centering
+	\caption{\textbf{Top@N} (\textbf{N} $\in {\{1, 5, 10\}}$) results of different bug localization methods. We use the shorthand names for program for brevity. ``\textbf{SAV}'' stands for SAVANT, ``\textbf{OCHI}'' stands for OCHIAI, , ``\textbf{D$^{*}$}'' stands for DSTAR, ``\textbf{PRO}'' stands for ``PROMESIR'', and ``\textbf{MUL}'' stands for ``MULTRIC''.}
+	\begin{tabular}{|c|l|c|c|c|c|c|c|c|c|c|c|c|}
+		\hline
+		\textbf{Top N} & \textbf{Project} & \textbf{NetML} & \textbf{AML} & \textbf{SAV} & \textbf{OCHI} & \textbf{D}$^{*}$ & \textbf{PRO} & $\textbf{DIT}^\textbf{A}$ & $\textbf{DIT}^\textbf{B}$ & $\textbf{LR}^\textbf{A}$ & $\textbf{LR}^\textbf{B}$ & \textbf{MUL}\\
+		\hline\hline
+		\multirow{8}{*}{1}      & Ant&13&9&&&&7&3&3&1&11&2\\
+		& AspectJ&11&7&&&&4&4&3&0&0&0\\
+		& Lang&30&28&&&&&&&&&\\
+		& Lucene&12&11&&&&8&7&7&1&7&4\\
+		& Math&32&25&7&&&&3&3&1&11&2\\
+		& Rhino&10&4&2&&&&1&1&0&2&2\\
+		& Time&8&4&&&&&&&&&\\
+		\cline{2-13}
+		& \textbf{Overall}&&&&&&&&&&&\\
+		
+		\hline
+		\multirow{5}{*}{5} &Ant&24&22&&&&17&10&10&11&20&7\\ 
+		& AspectJ& 15 & 13&&& & 6 & 4 &3&0&0&1\\
+		& Lang&62&48&&&&&&&&&\\
+		&Lucene&25&22&&&&18&13&13&6&16&13\\
+		& Math&69&47&&&&&&&&&\\
+		&Rhino&18&14&&&&13&5&5&2&8&8\\
+		& Time&13&13&&&&&&&&&\\
+		\cline{2-13}
+		& \textbf{Overall}&&&&&&&&&&&\\
+		\hline
+		\multirow{5}{*}{10} &     Ant&35&31&&&&28&20&20&19&32&15\\
+		&AspectJ&16&13&&&&9&4&3&0&0&2\\
+		& Lang&62&53&&&&&&&&&\\
+		&    Lucene&30&29&&&&21&20&19&10&24&16\\
+		& Math&75&53&&&&&&&&&\\
+		&   Rhino&19&19&&&&14&7&7&3&12&11\\
+		& Time&18&15&&&&&&&&&\\
+		\cline{2-13}
+		&  {\textbf{Overall}}&&&&&&&&&&&\\
+		\hline
+	\end{tabular}
+	\label{tab:result_top_N}
+\end{table*}
+
+\begin{table*}[!t]
+	\centering
+	\caption{Mean Average Precision (MAP) results of different bug localization methods. We use the shorthand names for program for brevity. ``\textbf{SAV}'' stands for SAVANT, ``\textbf{OCHI}'' stands for OCHIAI, , ``\textbf{D$^{*}$}'' stands for DSTAR, ``\textbf{PRO}'' stands for ``PROMESIR'', and ``\textbf{MUL}'' stands for ``MULTRIC''.}
+	\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|}
+		\hline
+		\textbf{Project} & \textbf{NetML} & \textbf{AML} & \textbf{SAV} & \textbf{OCHI} & \textbf{D}$^{*}$ & \textbf{PRO} & $\textbf{DIT}^\textbf{A}$ & $\textbf{DIT}^\textbf{B}$ & $\textbf{LR}^\textbf{A}$ & $\textbf{LR}^\textbf{B}$ & \textbf{MUL}\\
+		\hline\hline
+		Ant &0.270&0.234&&&&0.206&0.120&0.120&0.070&0.218&0.077\\
+		AspectJ &0.219&0.187&&&&0.121&0.092&0.071&0.006&0.004&0.016\\
+		Lang&0.638&0.542&&&&&&&&&\\
+		Lucene &0.290&0.284&&&&0.204&0.169&0.166&0.063&0.184&0.188\\
+		Math&0.358&0.255&&&&&&&&&\\
+		Rhino &0.302&0.243&&&&0.203&0.092&0.090&0.034&0.103&0.172\\
+		Time&0.354&0.294&&&&&&&&&\\
+		\hline
+		\textbf{Overall} &&&&&&&&&&&\\
+		
+		\hline
+	\end{tabular}
+	\label{tab:result_map}
+\end{table*}
+
+\begin{table*}[!t]
+	\centering
+	\caption{The $p$-values of the Wilcoxon test applying the BH procedure on various pairs of bug localization methods}
+	\begin{tabular}{|l|c|c|c|c|}
+		\hline
+		\textbf{Method Comparison} & \textbf{Top 1} & \textbf{Top 5} & \textbf{Top 10} & \textbf{MAP}\\
+		\hline\hline
+		NetML vs. AML & 0.029 (*) & 0.033 (*) & 0.079 & 0.006 (**)\\
+		%\hline
+		NetML vs. PROMESIR & $2 \times 10^{-4}$ (**) & $7 \times 10^{-4}$ (**) & $2 \times 10^{-4}$ (**) &  0.003 (**)  \\
+		%\hline
+		NetML vs. DIT$^A$  & $5 \times 10^{-5}$ (**) & $3 \times 10^{-6}$ (**) & $3 \times 10^{-6}$ (**) & $10^{-5}$ (**)   \\
+		%\hline
+		NetML vs. DIT$^B$   & $5 \times 10^{-5}$ (**) & $3 \times 10^{-6}$ (**) & $3 \times 10^{-6}$ (**) & $10^{-5}$ (**)   \\
+		%\hline
+		NetML vs. LR$^A$    & $8 \times 10^{-4}$ (**) & $5 \times 10^{-6}$ (**) & $3 \times 10^{-6}$ (**) & $5 \times 10^{-5}$ (**) \\
+		%\hline
+		NetML vs. LR$^B$     & $3 \times 10^{-6}$ (**) & $8 \times 10^{-7}$ (**) & $8 \times 10^{-7}$ (**) & $8 \times 10^{-7}$ (**) \\
+		%\hline
+		NetML vs. MULTRIC  & $9 \times 10^{-6}$ (**) & $5 \times 10^{-6}$ (**) & $8 \times 10^{-7}$ (**)  & $5 \times 10^{-6}$ (**)   \\
+		\hline
+		\multicolumn{5}{l}{(*): smaller than $0.05$, (**): smaller than $0.01$}
+	\end{tabular}
+	\label{tab:wilcoxon_methods}
+\end{table*}
+
+Table~\ref{tab:result_top_N} shows the performance of NetML and all the other baseline methods including AML, in terms of the Top N score. Out of all 157 bugs, NetML can successfully localize 46, 82, and 100 bugs when the developers inspect the top 1, top 5, and top 10 methods respectively (see the ``Overall'' row). This implies that NetML can successfully localize 48.39\%, 15.49\%, and 8.7\% more bugs than the best baseline (i.e., AML) by examining the top 1, top 5, and top 10 methods respectively. It is also shown that NetML outperforms the second best baseline (i.e., PROMESIR) by 119.05\%, 51.85\%, and 38.89\% in terms of Top N.
+% by studying the top 1, top 5 and top 10 methods among four software projects (i.e., AspectJ, Ant, Lucene, and Rhino). 
+
+%Table~\ref{tab:result_top_N} also shows whether the results of NetML and AML in term of top N methods are significant by applying Wilcoxon signed-rank test~\cite{Smucker:2007:CSS:1321440.1321528} at significant level $0.05$. For each software project, we employ the statistical test on the top N results of NetML and AML to assess whether two related samples come from the same population. In table~\ref{tab:result_top_N}, (*) means that the top N results of both multi-modal techniques are not correlated to each other, or NetML and AML are significant. According to table~\ref{tab:result_top_N}, NetML and AML are statistically significant in term of top 1 methods among three software projects (i.e., AspectJ, Ant, and Rhino), and across all software projects. In top 5 methods, only project Rhino shows the significant on the results between NetML and AML. In top 10 methods, both multi-modal techniques are not significant for all different projects.  
+%the results of NetML and AML are correlated to each other , means that both techniques are not significant. 
+%This means that NetML can successfully localize 119.05\%, 51.85\%, and 38.89\% more bugs than the best baseline (i.e., PROMESIR) by investigating the top 1, top 5, and top 10 methods respectively. Moreover, table~\ref{tab:result_top_N} also shows that NetML outperforms 48.39\%, 15.49\%, and 8.7\% in the top 1, top 5, and top 10 methods compared to AML.  
+
+%Table~\ref{tab:result_top_N} shows the performance of AML, and all the baselines in terms of Top N. Out of the 157 bugs, AML can successfully localize 31, 71, and 92 bugs when developers inspect the top 1, top 5, and top 10 methods respectively. This means that AML can successfully localize 47.62\%, 31.48\%, and 27.78\% more bugs than the best baseline (i.e., PROMESIR) by investigating the top 1, top 5, and top 10 methods respectively.
+
+%AML achieves SC@1 of 7, 9, 11 and 4 for AspectJ, Ant, Lucene, and Rhino dataset, respectively. Overall, AML achieves SC@1 score of 31, which outperforms all baselines. AML improves the SC@1 scores of PROMESIR, DIT$^\text{A}$, and DIT$^\text{B}$ by 47.62\%, 106.67\%, and 121.43\%, respectively. Moreover, considering each individual project, AML yields the best performance in terms of SC@1. $AML$ outperforms the SC@1 score of PROMESIR, the best performing baseline, by 75\%, 28.57\%, 37.5\%, and 100\% for AspectJ, Ant, Lucene, and Rhino dataset, respectively. Similarly, AML outperforms all baselines in term of SC@5 and SC@10.
+
+
+Subsequently, Table~\ref{tab:result_map} shows the MAP score of NetML along with those of the state-of-the-art multi-modal techniques. Averaging across the four projects, NetML achieves an overall MAP score of 0.270, which outperforms all the other baselines. In particular, NetML improves the average MAP performance of AML, PROMESIR, DIT$^\text{A}$, DIT$^\text{B}$, LR$^{A}$, LR$^{B}$, and MULTRIC by 13.92\%, 46.74\%, 128.81\%, 141.07\%, 527.91\%, 112.60\%, and 138.94\% respectively. Considering the individual projects, in terms of MAP, NetML remains the best performing  approach. In particular, NetML achieves MAP scores of 0.219, 0.270, 0.290, and 0.302 for the AspectJ, Ant, Lucene, and Rhino projects respectively. With respect to the best performing baseline (i.e., AML), these respectively constitute 17.11\%, 15.38\%, 2.11\% and 24.28\% improvements. Furthermore, NetML outperforms the MAP score of the second best baseline (i.e., PROMESIR) by 80.99\%, 31.07\%, 42.16\%, and 48.77\% across the four projects.
+
+
+
+We finally performed the Wilcoxon test to compare the Top N and MAP results of different techniques. We again note that, for each evaluation metric, the Wilcoxon test was conducted on the results collated over the four software projects. Table \ref{tab:wilcoxon_methods} presents the $p$-values for different metrics (i.e., Top 1, Top 5, Top 10 and MAP), which were evaluated at the significance levels of $0.05$ and $0.01$. The results show that NetML significantly outperforms AML in three metrics (i.e., Top 1, Top 5, and MAP). Note that the success rates at Top 1 and Top 5 are more important than Top 10, 
+%since it is easier to successfully localize a bug in a larger ranked list of methods (i.e., a larger $N$) than a smaller one. 
+since developers are less likely to check the 6th to 10th recommendations as compared to the first five recommendations~\cite{Kochhar:2016:PEA:2931037.2931051}. Compared to the remaining techniques, NetML also performs significantly better in terms of Top 1, Top 5, Top 10 methods and MAP. Altogether, these results demonstrate the efficacy of our NetML approach.
+
+%\recheck{@James: add results of wilcoxon signed-rank test}
+%Considering each individual project, in terms of MAP, NetML is still the best performing multi-modal bug localization approach. In particular, NetML beats the MAP score of the best performing baseline (i.e. PROMESIR), by 80.99\%, 31.07\%, 42.16\%, and 48.77\% for AspectJ, Ant, Lucene, and Rhino datasets, respectively. While AML outperforms the MAP score of PROMESIR, by 54.55\%, 13.59\%, 39.22\%, and 19.70\% for AspectJ, Ant, Lucene, and Rhino datasets, respectively. Moreover, NetML also outperforms the MAP score of AML by 17.11\%, 15.38\%, 2.11\% and 24.28\% across four different datasets (i.e. AspectJ, Ant, Lucene, and Rhino).
+
+%Table~\ref{tab:result_map} shows the performance of AML and the baselines in terms of MAP. AML achieves MAP scores of 0.187, 0.234, 0.284, and 0.243 for AspectJ, Ant, Lucene, and Rhino datasets, respectively. Averaging across the four projects, AML achieves an overall MAP score of 0.237 which outperforms all the baselines. AML improves the average MAP scores of PROMESIR, DIT$^\text{A}$, DIT$^\text{B}$, LR$^{A}$, LR$^{B}$, and MULTRIC by 28.80\%, 100.85\%, 111.61\%, 451.16\%, 91.34\%, and 109.73\% respectively. Moreover, considering each individual project, in terms of MAP, AML is still the best performing multi-modal bug localization approach. AML outperforms the MAP score of the best performing baseline, by 54.55\%, 13.59\%, 39.22\%, and 19.70\% for AspectJ, Ant, Lucene, and Rhino datasets, respectively.
+
+%Multric
+%HIT@1: 0 HIT@5:1 HIT@10:2 MAP:0.015747504520457017
+%HIT@1: 2 HIT@5:7 HIT@10:15 MAP:0.07718276346754124
+%HIT@1: 4 HIT@5:13 HIT@10:16 MAP:0.1877456233917966
+%HIT@1: 2 HIT@5:8 HIT@10:11 MAP:0.17229093717811098
+%Overal: HIT@1: 8 HIT@5:29 HIT@10:44 MAP:0.11324170713947646
+\iffalse
+%BACKUP
+\begin{table}[!htb]
+	\centering
+	\caption{Mean Average Precision: AML vs. Baselines. P = PROMESIR, D = DIT, L = LR, and M = MULTRIC.}
+    \begin{tabular}{|l|c|c|c|c|c|c|c|}
+    \hline
+\textbf{Project}&\textbf{AML}&\textbf{PROM}&$\textbf{D}^\textbf{A}$&$\textbf{D}^\textbf{B}$&$\textbf{L}^\textbf{A}$&$\textbf{L}^\textbf{B}$&\textbf{M}\\ \hline\hline
+ AspectJ&0.187&0.121&0.092&0.071&0.006&0.004&0.016\\
+ Ant&0.234&0.206&0.12&0.120&0.070&0.218&0.077\\
+ Lucene&0.284&0.204&0.169&0.166&0.063&0.184&0.188\\
+ Rhino&0.243&0.203&0.092&0.090&0.034&0.103&0.172\\
+
+\hline\hline
+\textbf{Overall}&0.237&0.184&0.118&0.112&0.043&0.127&0.113\\
+
+ \hline
+\end{tabular}
+\label{tab:result_map}
+\end{table}
+\fi
+
+
+
+
+
+%Moreover, we find that our novel component of AML, i.e., $\text{AML}^\text{SuspWord}$, can outperform all the baselines. $\text{AML}^\text{SuspWord}$ can achieve a Top 1, Top 5, Top 10, and MAP scores of 26, 66, 83, and 0.193. These results outperform the best performing baseline by 23.81\%, 	22.22\%, 	15.28\%, and 	4.89\% respectively.
+
+%23.81%	22.22%	15.28%	4.89%
+
+%\begin{table}[!htb]
+%	\centering
+%	\caption{Success-Rate@10: AML vs. Baselines.}
+%    \begin{tabular}{|c|cccc|}
+%    \hline
+%        \textbf{Project}&\textbf{AML} & \textbf{PROMESIR} & $\textbf{DIT}^\textbf{A}$ &$\textbf{DIT}^\textbf{B}$ \\
+%        \hline\hline
+%AspectJ&13&9&4&3\\
+%Ant&31&28&20&20\\
+%Lucene&29&21&20&19\\
+%Rhino&19&14&7&7\\
+% \hline\hline
+%\textbf{Overall}&92&72&51&49\\
+%         \hline
+%    \end{tabular}
+%    \label{tab:result_top_10}
+%\end{table}
+
+%$AML$ achieves success-rate@5 of 24.39\%, 39.62\%, 64.86\%, and 53.85\% for AspectJ, Ant, Lucene, and Rhino dataset, respectively. Averaging across the four projects, $AML$ achieves an overall success-rate@5 score of 43.95\% which outperforms all the baselines. $AML$ improves the success-rate@5 scores of PROMESIR, $DIT^A$, and $DIT^B$ by 27.78\%, 115.63\%, and 122.58\% respectively. Moreover, considering each individual project, in terms of success-rate@5, $AML$ is still the best performing multi-modal bug localization tool. $AML$ outperforms the success-rate@5 score of PROMESIR, the best performing baseline, by 66.67\%, 23.53\%, and 33.33.\% for AspectJ, Ant, and Lucene dataset, respectively. %In summary, considering all metrics and all datasets, AML outperforms all the baselines. 

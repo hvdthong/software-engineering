@@ -1,0 +1,127 @@
+This is BibTeX, Version 0.99dThe top-level auxiliary file: main-ieee.aux
+The style file: IEEEtranS.bst
+Database file #1: main.bib
+Warning--I'm ignoring XieKCYH13's extra "series" field
+--line 725 of file main.bib
+Database file #2: pbuglocator.bib
+Repeated entry---line 113 of file pbuglocator.bib
+ : @inproceedings{DallmeierZ07
+ :                            ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 159 of file pbuglocator.bib
+ : @article{Abreu:2009
+ :                    ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 238 of file pbuglocator.bib
+ : @inproceedings{AnvikHM05
+ :                         ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 280 of file pbuglocator.bib
+ : @article{DitRP13
+ :                 ,
+I'm skipping whatever remains of this entry
+Database file #3: faultlocal.bib
+Repeated entry---line 183 of file faultlocal.bib
+ : @inproceedings{Abreu:2009
+ :                          ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 4501 of file faultlocal.bib
+ : @inproceedings{CZ05
+ :                    ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 10816 of file faultlocal.bib
+ : @inproceedings{JH05
+ :                    ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 13059 of file faultlocal.bib
+ : @inproceedings{LAZJ03
+ :                      ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 13072 of file faultlocal.bib
+ : @inproceedings{Libl+05
+ :                       ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 13276 of file faultlocal.bib
+ : @inproceedings{LYFHM05
+ :                       ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 16964 of file faultlocal.bib
+ : @inproceedings{RR03
+ :                    ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 19277 of file faultlocal.bib
+ : @techreport{tassey02economic
+ :                             ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 22140 of file faultlocal.bib
+ : @inproceedings{Zeller2002a
+ :                           ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 22152 of file faultlocal.bib
+ : @article{ZH02
+ :              ,
+I'm skipping whatever remains of this entry
+Database file #4: IEEEabrv.bib
+A bad cross reference---entry "SahaLKP13"
+refers to entry "DBLP:conf/kbse/2013", which doesn't exist
+A bad cross reference---entry "RR03"
+refers to entry "conf/kbse/2003", which doesn't exist
+A bad cross reference---entry "XuanM14"
+refers to entry "DBLP:conf/icsm/2014", which doesn't exist
+A bad cross reference---entry "WangLL14"
+refers to entry "DBLP:conf/icsm/2014", which doesn't exist
+A bad cross reference---entry "XieKCYH13"
+refers to entry "conf/ssbse/2013", which doesn't exist
+A bad cross reference---entry "le2015synergizing"
+refers to entry "DBLP:conf/kbse/2015", which doesn't exist
+A bad cross reference---entry "Kellogg16"
+refers to entry "DBLP:conf/sigsoft/2016", which doesn't exist
+Warning--I didn't find a database entry for "DBLP:conf/sigsoft/2016"
+Warning--I didn't find a database entry for "DBLP:conf/kbse/2015"
+Warning--I didn't find a database entry for "DBLP:conf/icsm/2014"
+Warning--I didn't find a database entry for "conf/ssbse/2013"
+Warning--I didn't find a database entry for "conf/kbse/2003"
+Warning--I didn't find a database entry for "DBLP:conf/kbse/2013"
+-- IEEEtranS.bst version 1.14 (2015/08/26) by Michael Shell.
+-- http://www.michaelshell.org/tex/ieeetran/bibtex/
+-- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+** Sorting version - not for normal IEEE work.
+Warning--to sort, need author, organization, or key in jdt_link
+Warning--to sort, need author, organization, or key in stopword_link
+Warning--to sort, need author, organization, or key in cobertura_link
+Warning--to sort, need author, organization, or key in aspectj_link
+Warning--to sort, need author, organization, or key in ant_link
+Warning--to sort, need author, organization, or key in lucene_link
+Warning--to sort, need author, organization, or key in rhino_link
+Name 1 in "Tien-Duy B. Le, and Shaowei Wang, and David Lo," has a comma at the end for entry LeWL13
+while executing---line 2589 of file IEEEtranS.bst
+Name 2 in "Tien-Duy B. Le, and Shaowei Wang, and David Lo," has a comma at the end for entry LeWL13
+while executing---line 2589 of file IEEEtranS.bst
+Name 3 in "Tien-Duy B. Le, and Shaowei Wang, and David Lo," has a comma at the end for entry LeWL13
+while executing---line 2589 of file IEEEtranS.bst
+Name 1 in "Tim Menzies, and Ekrem Kocaguneli, and Jacky W. Keung," has a comma at the end for entry kocaguneli2012value
+while executing---line 2589 of file IEEEtranS.bst
+Name 2 in "Tim Menzies, and Ekrem Kocaguneli, and Jacky W. Keung," has a comma at the end for entry kocaguneli2012value
+while executing---line 2589 of file IEEEtranS.bst
+Name 3 in "Tim Menzies, and Ekrem Kocaguneli, and Jacky W. Keung," has a comma at the end for entry kocaguneli2012value
+while executing---line 2589 of file IEEEtranS.bst
+** IEEEtran BST control entry "IEEEexample:BSTcontrol" detected.
+Name 1 in "Tien-Duy B. Le, and Shaowei Wang, and David Lo," has a comma at the end for entry LeWL13
+while executing---line 2601 of file IEEEtranS.bst
+Name 2 in "Tien-Duy B. Le, and Shaowei Wang, and David Lo," has a comma at the end for entry LeWL13
+while executing---line 2601 of file IEEEtranS.bst
+Name 3 in "Tien-Duy B. Le, and Shaowei Wang, and David Lo," has a comma at the end for entry LeWL13
+while executing---line 2601 of file IEEEtranS.bst
+Name 3 in "Tien-Duy B. Le, and Shaowei Wang, and David Lo," has a comma at the end for entry LeWL13
+while executing---line 2601 of file IEEEtranS.bst
+Name 1 in "Tim Menzies, and Ekrem Kocaguneli, and Jacky W. Keung," has a comma at the end for entry kocaguneli2012value
+while executing---line 2601 of file IEEEtranS.bst
+Name 2 in "Tim Menzies, and Ekrem Kocaguneli, and Jacky W. Keung," has a comma at the end for entry kocaguneli2012value
+while executing---line 2601 of file IEEEtranS.bst
+Name 3 in "Tim Menzies, and Ekrem Kocaguneli, and Jacky W. Keung," has a comma at the end for entry kocaguneli2012value
+while executing---line 2601 of file IEEEtranS.bst
+Name 3 in "Tim Menzies, and Ekrem Kocaguneli, and Jacky W. Keung," has a comma at the end for entry kocaguneli2012value
+while executing---line 2601 of file IEEEtranS.bst
+
+Done.
+(There were 35 error messages)

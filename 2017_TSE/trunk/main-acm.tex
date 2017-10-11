@@ -1,0 +1,120 @@
+\documentclass{sig-alternate}
+\pdfpagewidth=8.5in
+\pdfpageheight=11in
+\usepackage{float}
+%\usepackage{subfigure}
+\usepackage{alltt}
+\usepackage{color}
+\usepackage{graphicx}
+ \usepackage{multirow}
+\usepackage{epstopdf}
+\usepackage{hyperref}
+%\usepackage{algorithm2e}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{balance}
+\usepackage{tabularx}
+\usepackage{array}
+
+
+
+\newcommand{\dl}[1]{\textcolor{red}{{\it [DL says: #1]}}}
+\usepackage{amssymb,amsmath}
+\usepackage{proof,latexsym}
+\usepackage{color}
+\usepackage{enumerate}
+
+\usepackage{ifthen}
+\usepackage{amssymb}
+
+\usepackage{float}
+%\usepackage{subfigure}
+\usepackage{alltt}
+\usepackage{color}
+\usepackage{graphicx}
+ \usepackage{multirow}
+\usepackage{epstopdf}
+\usepackage{hyperref}
+%\usepackage{algorithm2e}
+\usepackage{url}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+%\usepackage{algorithmic}
+\usepackage{epstopdf}
+\usepackage{balance}
+\usepackage{multirow}
+\usepackage{algpseudocode}
+%\usepackage{arydshln}
+
+\newcommand{\CodeIn}[1]{{\small\texttt{#1}}}
+\newcommand{\CodeOutSize}{\scriptsize}
+\newenvironment{CodeOut}{\begin{scriptsize}}{\end{scriptsize}}
+\newtheorem{defn}{Definition}
+\newtheorem{prop}{Property}
+
+\begin{document}
+\newcommand{\nop}[1]{}
+\def\concat{\mathit{+\!\!+}}
+\def\ln{\hspace{0.12cm}}
+\newcommand{\hide}[1]{\hspace*{-5pt}~}
+
+
+\floatstyle{ruled}
+\newfloat{algorithm}{thp}{loa}
+\floatname{algorithm}{Algorithm}
+\newfloat{procedure}{thp}{loa}
+\floatname{procedure}{Procedure}
+
+\newcommand{\ie}{{\sl i.e.}}
+\newcommand{\eg}{{\sl e.g.}}
+\newcommand{\etc}{{\sl etc.}}
+
+\title{ Information Retrieval and Spectrum Based\\ Bug Localization: Better Together}
+
+% ABSo
+% ALoS
+
+%Instance-Specific Fault Localization Approach Leveraging Bug Reports and Program Spectra}
+
+%Adaptive
+%Instance-specific
+%Localization
+%Buggy Methods
+%Execution Traces
+%Bug Reports
+%Suspicious Words
+
+
+
+
+\numberofauthors{1}
+\author{\alignauthor Tien-Duy B. Le, Richard J. Oentaryo, and David Lo\\
+\affaddr{School of Information Systems} \\
+\affaddr{Singapore Management University}\\
+\email{\{btdle.2012,roentaryo,davidlo\}@smu.edu.sg}
+}
+
+\conferenceinfo{} {}
+\CopyrightYear{}
+\crdata{}
+\clubpenalty=10000
+\widowpenalty = 10000
+
+\maketitle
+\sloppy
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+%\category{H.2.8}{Database Management}{Database Applications}[Data Mining]
+%\category{J.4}{Computer Applications}{Social and Behavioral Sciences}[Sociology]
+
+%\terms{Algorithms, Experimentation}
+%\keywords{Direct antagonistic community, Mining maximal bi-cliques, Signed social network}
+
+\input{body}
+\balance
+\bibliographystyle{abbrv}
+\bibliography{main,pbuglocator,faultlocal}
+\end{document}

@@ -1,0 +1,81 @@
+\subsection{Overview}
+\begin{figure}[t]
+\center
+\caption{Overal Framework (TF-IDF stands for weights of {Term Frequency\textendash Inverse Document Frequency})}
+\includegraphics[scale=0.55,angle=-90]{framework_0001.eps}
+\label{fig:framework}
+\end{figure}
+
+Figure \ref{fig:framework} demonstrates the overall framework of our proposed approach. In the figure, our approach takes as input a set of program methods from a target program, a bug report extracted from a bug tracking system (e.g., Jira, or Bugzilla), and a set of valid test cases. Among the input test cases, there must be at least one test case that the target program returns an unexpected result (i.e., failed test cases). With the above input, we extract program methods from source code units to create a corpus of documents, and conduct text preprocessing step to remove some special symbols, and normalize terms to improve bug localization accuracy. After text preprocessing, we calculate \textit{td\textemdash idf} weights of words in input documents (i.e., program methods) (Section \ref{sec:bug_localization}).  On the other hand, we instrument the target program, and execute input test cases to obtain program spectra (Section \ref{sec:sbfl}). Importantly, for each of test cases, we not only pay attention to executed program methods or files, but we also record executed words during the execution of a test cases. In our approach, we value the importance of suspicousness scores at program method level, and especially word level, as if a document contains highly suspicious words according to the execution of test cases, it is more likely to be faulty. Finally, we combine obtained \textit{tf\textemdash idf} weights, and suspicousness scores into Vector Space Model in order to capture valuable information from input bug reports, and test cases to localize faulty program methods. The following sections describe details of components in Figure \ref{fig:framework}.
+
+\subsection{Method Corpus Creation \& Text Preprocessing}
+
+
+\subsection{Recording Program Spectra}\label{sec:record_spectra}
+
+
+\subsection{Combining TF-IDF weighting and Word-based Suspiciousness Scores}\label{sec:sstfidf}
+
+In this section, we define a new statistic that combine \textit{TF-IDF} weighting the suspiciousness scores of words. We denote the statistic as \textit{SSTFIDF} which stands for Suspiciousness Score\textendash Term Frequency\textendash Inverse Document Frequency. Given a word $w$ in a document $d$ of a method corpus $C$, the following is the formula of word $w$:
+\begin{equation}
+SSTFIDF(w,d,C)=SS_{word}(w)\times \textit{TF-IDF}(w,d,C)
+\label{eq:sstfidf}
+\end{equation}
+
+
+In the above formula, $SS_{word}(w)$ is the suspiciousness score of word $w$ returned by a particular spectrum-based fault localization formula using the collected raw statistics (Section \ref{sec:record_spectra}), and $\textit{TF-IDF}(w,d,C)$ is the Term Frequency\textendash Inverse Document Frequency of word $w$ in document $d$ of corpus $C$. According to the formula, our proposed \textit{SSTFIDF} is the extension of \textit{TF-IDF} which takes into account the suspiciousness aspect of a word in a document. The purpose of $SS_{word}$ in our formula is that it helps assign higher weights to words that have higher suspiciousness scores. In particular, if a word has a higher suspiciosuness score, the program elements containing the word are likely to be faulty, as SBFL raw statistics of words are collected according to their containing program elements (i.e.,statements, basic blocks, methods, classes). On the other hand, words with very low or zero suspiciousness scores are likely to be least relevant to under-consideration bugs. Hence, our \textit{SSTFIDF} also helps exclude such cases when words with high \textit{TF-IDF} weights, but actually not relevant to the bugs mentioned in the bug report, and addressed by the input set of test cases.
+
+
+%In our paper, we calculate $TF(w,d)$, and $IDF(w,C)$ using Equation \ref{eq:tfidf} in Section \ref{sec:bug_localization}. Therefore, the following is the detailed formula of \textit{SSTFIDF} of word $w$ in document $d$ in corpus $C$ used in our experiments:
+%\begin{align*}
+%SSTFIDF(w,d,C)=&SS_{word}(w)\times \log(f(w,d)+1)\\
+%&\times \log\frac{|C|}{|{d_i\in C : w \in d_i }|}
+%\end{align*}
+
+%The  measure is built upon the well-known statistic Term Frequency\textendash Inverse Document Frequency (TF\textendash IDF).
+
+\subsection{Text Retrieval Model using Suspiciousness Scores}
+
+%method suspiciousness scores
+
+%VSM
+%SSTFIDF
+%value method tarantula scores
+
+%weighted sum
+
+\subsubsection{Proposed Model}
+
+In this section, we propose the text retrieval model that combines \textit{TF-IDF} weighting with word-based, and method-based suspiciousness scores. The purpose of the combination is to maximize the ranking of relevant documents (i.e., faulty methods). Our approach is built upon the standard text retrieval model\textemdash Vector Space Model (VSM) with the utilization of suspiciousness scores. We denote our approach as $VSM^{susp}$. Similar to standard VSM, $VSM^{susp}$ represents each document as a vector of weights where each weight corresponds to a word. In $VSM^{susp}$, we compute the weight of each word using $SSTFIDF$ statistic (Section \ref{sec:sstfidf}). Following Equation  \ref{eq:sstfidf}, the weight of word $w$ in document $d$ of corpus $C$ is calculated as follows
+\begin{align*}
+SSTFIDF(w,d,C)&=SS_{word}(w)\times \log(f(w,d)+1)\\
+&\times \log\frac{|C|}{|{d_i\in C : w \in d_i }|}
+\end{align*}
+In the above formula, $SS_{word}(w)$ is the suspiciousness score of word $w$ calculated by a generic spectrum-based fault localization formula, $f(w,d)$ is the number of times word $w$ appears in document $d$, and $d_i \in C$ means document $d_i$ is in set of document $C$. Similarly, $w \in d_i$ means word $w$ belongs to document $d_i$.
+
+Given a bug report $q$, and document $d$ in method corpus, we compare the two documents by calculating the cosine similarity their document vector $\vec{q}$ and $\vec{d}$. We denote the cosine similarity between bug report $q$, and document $d$ in method corpus $C$ as $cosine(q,d,C)$. With the use of proposed statistic $SSTFIDF$, the value of $cosine(q,d,C)$ reflects the textual similarity between suspicious parts of bug report $q$, and document $d$ that contain suspicious words. However, there are still cases that documents with low or zero method-based suspiciousness scores still have high cosine similarity to the bug report. The reason is that documents in these cases are sharing suspicious words with the input bug report. Therefore, we multiply the cosine similarity by the suspiciousness scores of the document(i.e., method) to diminish ranking of irrelevant documents as well as increase ranking of . The following is the formula of the similarity between bug report $q$, and document $d$ in our proposed model:
+\begin{align}
+&sim_{VSM}^{susp}(q,d,C)=SS_{method}(d)\nonumber \\
+&\times \frac{\sum\limits_{w\in q \cap d} SSTFIDF(w,q,C)\times SSTFIDF(w,d,C)}{\sqrt{\sum\limits_{w \in q} SSTFIDF(w,q,C)^2} \times \sqrt{\sum\limits_{w \in d} SSTFIDF(w,d,C)^2}}
+\label{eq:sum_vsm_susp}
+\end{align}
+
+In the above formula, $SS_{method}(d)$ is method-based suspiciousness scores of document $d$ calculated by a spectrum-based fault localization formula, and $SSTFIDF(w,d,C)$ is the Suspiciousness Score\textendash Term Frequency\textendash Inverse Document Frequency statistic of word $w$ in document $d$ of corpus $C$ (Section \ref{sec:sstfidf}).
+
+\subsubsection{Instance-based Composite Model}\label{sec:composite_model}
+
+We propose a model that combines our proposed $VSM^{susp}$, standard VSM, and spectrum-based fault localization together to create a powerful composite bug localization model.  The formula of similarity score between bug report $q$, and document $d$ is as follows
+\begin{align}
+sim_{comp}&(q,d,C)=\alpha \times SS_{method}(d)+\beta \times sim_{VSM}^{susp}(q,d,C) \nonumber\\
+&+ (1-\alpha-\beta) \times sim_{VSM}^{std}(q,d,C)
+\label{eq:composite}
+\end{align}
+%(0 \leq \alpha, \beta \leq 1)
+In the above formula, $SS_{method}(d)$ is the method-based suspiciosness scores of $d$ estimated by a spectrum-based fault localization, $sim_{VSM}^{susp}(q,d,C)$ is the similarity score between $q$, and $d$ output by our proposed $VSM^{susp}$ model (Equation \ref{eq:sum_vsm_susp}), $sim_{VSM}^{std}$ is the cosine similarity between of $q$, and $d$ in the standard Vector Space Model, $\alpha$ and $\beta$ are two constants in range of $[0..1]$. In our composite model, each member score has got a coefficient to determine how much its corresponding model contributes to the composite similarity score. With an appropriate combination of $\alpha$, and $\beta$, the composite model can smooth some of retrieval noise from its member models to achieve the best performance. Importantly, instead of using the same pair of $\alpha$, and $\beta$ for all the bug reports, we customize values of $\alpha$, and $\beta$ for every single bug report. We use information of similar known bug reports to estimate $\alpha$, and $\beta$. Given an input bug report, we first retrieve the top $K$ similar known bug reports to the input bug report  using standard Vector Space Model. Then, we infer the best pair of $\alpha$, and $\beta$ among the these $K$ bugs. The inferred values of $\alpha$, and $\beta$ are used to compute the similarity scores of documents using Equation \ref{eq:composite}. Overall, our proposed composite retrieval model tries to capture the specific property of each input bug report. Therefore, we refer to our composite model as instance-based composite model.
+
+
+% For each input bug report, we customize the values of $\alpha$, and $\beta$ using information of similar bugs to maximize the performance of bug localization.
+
+
+%\subsection{Retrieval Model}
+

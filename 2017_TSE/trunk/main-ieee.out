@@ -1,0 +1,33 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Background}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{IR-Based Bug Localization}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Spectrum-Based Bug Localization}{section.2}% 4
+\BOOKMARK [1][-]{section.3}{Proposed Approach}{}% 5
+\BOOKMARK [2][-]{subsection.3.1}{Integrator Model}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.2}{Objective Function}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.3}{Adaptive Learning}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.4}{Feature Extraction}{section.3}% 9
+\BOOKMARK [2][-]{subsection.3.5}{Graph Construction}{section.3}% 10
+\BOOKMARK [1][-]{section.4}{Experiments }{}% 11
+\BOOKMARK [2][-]{subsection.4.1}{Dataset}{section.4}% 12
+\BOOKMARK [2][-]{subsection.4.2}{Evaluation Metrics and Settings}{section.4}% 13
+\BOOKMARK [2][-]{subsection.4.3}{Research Questions}{section.4}% 14
+\BOOKMARK [3][-]{subsubsection.4.3.1}{RQ1: How Effective is NetML Compared to Other State-of-the-Art Techniques?}{subsection.4.3}% 15
+\BOOKMARK [3][-]{subsubsection.4.3.2}{RQ2: Do Feature Components of NetML Contribute toward Its Overall Performance?}{subsection.4.3}% 16
+\BOOKMARK [3][-]{subsubsection.4.3.3}{RQ3: How Effective is the NetML Integrator?}{subsection.4.3}% 17
+\BOOKMARK [3][-]{subsubsection.4.3.4}{RQ4: What is the Effect of Varying the Number of Neighbors K on the Performance of NetML?}{subsection.4.3}% 18
+\BOOKMARK [2][-]{subsection.4.4}{Results}{section.4}% 19
+\BOOKMARK [3][-]{subsubsection.4.4.1}{RQ1: Comparisons of NetML with Other Techniques}{subsection.4.4}% 20
+\BOOKMARK [3][-]{subsubsection.4.4.2}{RQ2: Contribution of Feature Components}{subsection.4.4}% 21
+\BOOKMARK [3][-]{subsubsection.4.4.3}{RQ3: Comparisons among Integrator Models}{subsection.4.4}% 22
+\BOOKMARK [3][-]{subsubsection.4.4.4}{RQ4: Effect of Varying Number of Neighbors}{subsection.4.4}% 23
+\BOOKMARK [2][-]{subsection.4.5}{Discussion}{section.4}% 24
+\BOOKMARK [3][-]{subsubsection.4.5.1}{Number of Failed Test Cases and Its Impact}{subsection.4.5}% 25
+\BOOKMARK [3][-]{subsubsection.4.5.2}{Threats to Internal Validity}{subsection.4.5}% 26
+\BOOKMARK [1][-]{section.5}{Related Work}{}% 27
+\BOOKMARK [2][-]{subsection.5.1}{Multi-Modal Feature Location}{section.5}% 28
+\BOOKMARK [2][-]{subsection.5.2}{IR-Based Bug Localization}{section.5}% 29
+\BOOKMARK [2][-]{subsection.5.3}{Spectrum-Based Bug Localization}{section.5}% 30
+\BOOKMARK [2][-]{subsection.5.4}{Other Related Studies}{section.5}% 31
+\BOOKMARK [1][-]{section.6}{Conclusion and Future Work}{}% 32
+\BOOKMARK [1][-]{section*.1}{References}{}% 33

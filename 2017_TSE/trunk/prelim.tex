@@ -1,0 +1,150 @@
+\section{Background}
+\label{sec.prelim}
+
+In this section, we present some background material on IR-based and spectrum-based bug localization.
+
+%Section~\ref{sec:irbasedbl} first presents IR-based bug localization. Section~\ref{sec:spectrumbasedbl} next presents spectrum-based bug localization.
+
+%\label{sec:irbasedbl}
+
+\subsection{IR-Based Bug Localization}
+\label{sec.IR-based} 
+
+IR-based bug localization techniques consider an input bug report (i.e., the text in the summary and description of the bug report as a query, and program elements in a code base as documents, and employ IR techniques to sort the program elements based on their relevance with the query. The intuition behind these techniques is that program elements sharing many common words with the input bug report are likely to be relevant to the bug. By using text retrieval models, IR-based bug localization computes the similarities between various program elements and the input bug report. Then, program elements are sorted in descending order of their textual similarities to the bug report, and sent to developers for manual inspection.
+
+%\begin{table}[t]
+%	\centering
+%%	\caption{Bug Report 54460 of Apache Ant}
+%    \begin{tabular}{|p{7.5cm}|}
+%    \hline
+%    \textbf{Bug 54460}
+%    
+%    \texttt{Summary:} Base64Converter not properly handling bytes with MSB set (not masking byte to int conversion)
+%    
+%    \texttt{Description:} Base64Converter not properly bytes with MSB set (not masking byte to int conversion).
+%    
+%    Every 3rd byte taken for conversion (least significant in triplet is not being masked with added to integer, if the msb is set this leads to a signed extension which overwrites the previous two bytes with all ones \dots \\ \hline
+%    
+%    \end{tabular}
+%    \label{fig:bug_example}
+%\end{table}
+
+%Figure~\ref{fig:bug_example} shows an example bug report submitted to Bugzilla, which  is obtained from {\url{https://issues.apache.org/bugzilla/show_bug.cgi?id=54460}}  and its summary and description fields. An IR-based bug localization technique then employs an information retrieval technique to recover relevant documents from the query.
+
+%IR-Based bug localization takes as input a textual bug report (the summary and description of a bug) and outputs a ranked list of program elements sorted by the likelihood of them containing the bug. Developers then investigate the program elements in the ranked list, one at a time, to find the faulty program element.
+%These two steps are performed as follows:
+
+All IR-based bug localization techniques need to extract textual contents from source code files and preprocess textual contents (either from bug reports or source code files). First, comments and identifier names are extracted from source code files. These can be extracted by employing a simple parser. In this work, we use JDT~\cite{jdt_link} to recover the comments and identifier names from source code. Next, after the textual contents from source code and bug reports are obtained, we need to preprocess them. The purpose of text preprocessing is to standardize words in source code and bug reports. There are three main steps: text normalization, stopword removal, and stemming:
+
+\begin{enumerate}
+	\item Text normalization breaks an identifier into its constituent words (tokens), following camel casing convention. Following the work by Saha et al.~\cite{SahaLKP13}, we also keep the original identifier names.
+	\item Stopword removal removes punctuation marks, special symbols, number literals, and common stopwords~\cite{stopword_link}. It also removes programming keywords such as $\mathit{if}$, $\mathit{for}$, $\mathit{while}$, etc., which usually appear too frequently to be useful to differentiate between documents.
+	\item Stemming simplifies English words into their root forms. For example, ''processed``, ''processing``, and ''processes`` are all simplified to ''process``. This increases the chance of a query and a document to share some common words. We use the popular Porter Stemming algorithm~\cite{P80}.
+\end{enumerate}
+
+
+
+Numerous IR techniques have been employed for bug localization. We highlight a popular IR technique namely \emph{Vector Space Model} (VSM). In VSM, queries and documents are represented as vectors of weights, where each weight corresponds to a term. The value of each weight is usually the \textit{term frequency\textemdash inverse document frequency} (TF-IDF)~\cite{Ramos1999} of the corresponding word. Term frequency refers to the number of times a word appears in a document. Inverse document frequency refers to the number of documents in a corpus (i.e., a collection of documents) that contain the word. The higher the term frequency and inverse document frequency of a word, the more important the word would be. In this work, given a document $d$ and a corpus $C$, we compute the TF-IDF weight of a word $w$ as follows:
+\begin{align}
+weight(w,d) &= \text{TF-IDF}(w,d,C) \nonumber\\
+            &= \log(f(w,d)+1) \times \log\frac{|C|}{|{d_i\in C : w \in d_i }|} \nonumber
+\end{align}
+where $f(w,d)$ is the number of times $w$ appears in $d$.
+%, and $d_i \in C$ means document $d_i$ is in the set of documents $C$. Similarly, $w \in d_i$ means word $w$ belongs to document $d_i$.
+
+%\begin{figure}[!t]
+%\centering
+%\fbox{
+%\includegraphics[bb=83 532 345 639,width=0.85\linewidth]{example.eps}
+%}\vspace{-0.2cm}\caption{Bug Report 54460 of Apache Ant}\vspace{-0.3cm}
+%\label{fig:bug_example}
+%\end{figure}
+
+
+%\begin{figure}[!t]
+%\centering
+%
+%    \begin{tabular}{|p{0.95\columnwidth}|}
+%    \hline
+%    \textbf{Bug 54460}\\ 
+%    \\%\texttt{Date:} 22 Jan, 2013\\
+%    \texttt{Summary:} 
+%    Base64Converter not properly handling bytes with MSB set (not masking byte to int conversion)\\    
+%   \\
+%    \texttt{Description:}
+%    Every 3rd byte taken for conversion (least significant in triplet is not being masked with added to integer, if the msb is set this leads to a signed extension which overwrites the previous two bytes with all ones \dots\\
+%    \hline
+%    \end{tabular}
+%
+%\caption{Bug Report 54460 of Apache Ant}
+%\label{fig:bug_example}
+%\end{figure}
+
+
+After computing a vector of weights for the query and each document in the corpus, we calculate the cosine similarity of the query and document vectors. The cosine similarity between query $q$ and document $d$ is given by:
+\begin{align}
+\label{eqn:cosine_sim}
+\mathit{sim}(q,d) = \frac{\sum\limits_{w\in (q\bigcap d)} \mathit{weight}(w,q) \times \mathit{weight}(w,d)}{\sqrt{\sum\limits_{w\in q}\mathit{weight}(w,q)^{2}} \times \sqrt{\sum\limits_{w\in d}\mathit{weight}(w,d)^{2}}}
+\end{align}
+where $w\in (q\bigcap d)$ means word $w$ appears both in the query $q$ and document $d$. Also, $\mathit{weight}(w,q)$ refers to the weight of word $w$ in the query $q$'s vector. Similarly, $\mathit{weight}(w,d)$ refers to the weight of word $w$ in the document $d$'s vector.
+
+%In our paper, we use the following formula to calculate TF-IDF weight of word $w$ in document $d$ given a set of document $C$:
+%\begin{equation}
+%\textit{TF-IDF}(w,d,C)=\log(f(w,d)+1) \times \log\frac{|C|}{|{d_i\in C : w \in d_i }|}
+%\label{eq:tfidf}
+%\end{equation}
+%
+%In comparison with spectrum-based fault localization techniques, IR based bug localization techniques are less costly, as they require no execution traces of the target program on the input set of test cases. In our paper, we propose an approach to integrate spectrum-based fault localization with IR based bug localization to maximize the ranking of faulty code units (i.e., methods).
+
+%\subsection{}\label{sec:spectrumbasedbl}
+
+\subsection{Spectrum-Based Bug Localization} 
+\label{sec.spectrum-based}
+
+Spectrum-based bug localization (SBBL)---also known as spectrum-based fault localization (SBFL)---takes as input a faulty program and two sets of test cases. One is a set of failed test cases, and the other one is a set of passed test cases. SBBL then instruments the target program, and records program spectra that are collected when the set of failed and passed test cases are run on the instrumented program. Each of the collected program spectrum contains information of program elements that are executed by a test case. Various tools can be used to collect program spectra as a set of test cases are run. In this work, we use Cobertura~\cite{cobertura_link}.
+
+\begin{table}[!t]
+	\caption{Raw Statistics for Program Element $e$}
+	\center
+    \begin{tabular}{|r|c|c|}
+    \hline
+    ~                 & e is \textit{executed} & e is \textit{not executed} \\ 
+    \hline
+    \hline
+
+    {unsuccessful} test & $n_f(e)$             & $n_f(\bar e)$                 \\ 
+    %\hline
+    {successful} test   & $n_s(e)$             &$n_s(\bar e)$              \\ \hline
+    \end{tabular}
+    \label{tab:sbfl_matrix}
+\end{table}
+
+Based on this spectra, SBBL typically computes some raw statistics for every program element. Tables \ref{tab:sbfl_matrix} and \ref{tab:sbfl_notations} summarize some raw statistics that can be computed for a program element $e$, given a program spectra $p$. These statistics are the counts of unsuccessful (i.e., failed), and successful (i.e., passed) test cases that execute or do not execute $e$. If a successful test case executes program element $e$, then we increase $n_s(e, p)$ by one unit. Similarly, if an unsuccessful test case executes program element $e$, then we increase $n_f(e, p)$ by one unit. SBBL uses these statistics to calculate the suspiciousness scores of each program element. The higher the suspiciousness score, the more likely the corresponding program element is the faulty element. After the suspiciousness scores of all program elements are computed, program elements are then sorted in descending order of their suspiciousness scores, and sent to developers for manual inspection.
+
+%\noindent
+%\textbf{Spectrum-Based Bug Localization using Tarantula:} 
+
+Different SBBL techniques have used different formulas to calculate the suspiciousness scores. Among these techniques, Tarantula is a popular one~\cite{JH05}. Using the notation in Table \ref{tab:sbfl_notations}, the following is the formula that Tarantula uses to compute the suspiciousness score of program element $e$, given program spectra $p$:
+\begin{align}
+\label{eqn:tarantula}
+Tarantula(e, p)=\frac{\frac{n_f(e, p)}{n_f(p)}}{\frac{n_f(e, p)}{n_f(p)}+\frac{n_s(e, p)}{n_s(p)}}	
+\end{align}
+The main idea of Tarantula is that program elements that are executed by failed test cases are more likely to be faulty than those that are not executed. Thus, Tarantula assigns a non-zero score to program element $e$ that has $n_f(e, p) > 0$. 
+
+\begin{table}[tb]
+	\centering
+	\caption{Raw Statistic Description}
+    \begin{tabular}{|p{1.3cm}|p{5.5cm}|}
+    \hline
+    \textbf{Notation} & \textbf{Description} \\ \hline \hline
+  \multirow{2}{*}{$n_f(e, p)$}        & Number of unsuccessful test cases executing program element $e$ in program spectra $p$          \\ \hline
+     \multirow{2}{*}{$n_f(\bar{e}, p)$}        & Number of unsuccessful test cases that do not execute program element $e$ in program spectra $p$           \\ \hline
+    \multirow{2}{*} {$n_s(e, p)$}         & Number of successful test cases that execute program element $e$ in program spectra $p$           \\ \hline
+     \multirow{2}{*}{$n_s(\bar{e}, p)$}        & Number   of successful test cases that do not execute program element $e$ in program spectra $p$    \\ \hline
+      $n_f(p)$        & Total number of unsuccessful test cases           \\ \hline
+
+    $n_s(p)$        & Total number of successful test cases          \\ \hline
+
+    \end{tabular}
+    \label{tab:sbfl_notations}
+\end{table}

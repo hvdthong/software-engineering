@@ -1,0 +1,70 @@
+\section{Related Work}
+\label{sec.related}
+
+In this section, we highlight a number of research studies that are closely related to our work.
+%Due to a large number of works in these areas, the survey here is by no means complete. We only highlight the closely related works.
+%For a more complete coverage of studies on bug localization, please refer to the survey papers by Dit et al.~\cite{DitRGP13}.
+
+\subsection{Multi-Modal Feature Location} 
+
+Multi-modal feature location takes as input a feature description and a program spectra, and finds program elements that implement the corresponding feature. There are several multi-modal feature location techniques proposed in the literature~\cite{PoshyvanykGMAR07,LiuMPR07,DitRP13}.
+
+Poshyvanyk et al. proposed an approach named PROMESIR that computes weighted sums of scores returned by an IR-based feature location solution (LSI~\cite{MarcusM03}) and a spectrum-based solution (Tarantula~\cite{JH05}), and rank program elements based on their corresponding weighted sums~\cite{PoshyvanykGMAR07}. Then, Liu et al. proposed an approach named SITIR which filters program elements returned by an IR-based feature location solution (LSI~\cite{MarcusM03}) if they are not executed in a failing execution trace~\cite{LiuMPR07}. Later, Dit et al. used HITS, a popular algorithm that ranks the importance of nodes in a graph, to filter program elements returned by SITIR~\cite{DitRP13}.
+%They created a graph corresponding to a dynamic call graph that is generated from failed execution traces and use this graph as input to HITS.
+Several variants are described in their paper and the best performing ones are $IR_{LSI}Dyn_{bin}WM_{HITS}(h,bin)^{bottom}$ and  $IR_{LSI}Dyn_{bin}WM_{HITS}(h,freq)^{bottom}$. We refer to these two as DIT$^A$ and DIT$^B$, respectively. They have showed that these variants outperform SITIR, though they have never been compared with PROMESIR.
+
+In this work, we compare our proposed approach against PROMESIR, DIT$^A$ and DIT$^B$. We show that our approach outperforms all of them on all datasets.
+
+\subsection{IR-Based Bug Localization} 
+
+Various IR-based bug localization approaches that employ information retrieval techniques to calculate the similarity between a bug report and a program element (e.g., a method or a source code file) have been proposed~\cite{Rao:2011:RSL:1985441.1985451,Lukins:2010:BLU:1824820.1824850,LeWL13,Sisman:2012:IVH:2664446.2664454,Zhou:2012:BFM:2337223.2337226,SahaLKP13,WL14,WangLL14,YeBL14}. 
+
+Lukins et al. used a topic modeling algorithm named Latent Dirichlet Allocation (LDA) for bug localization~\cite{Lukins:2010:BLU:1824820.1824850}. Then, Rao and Kak evaluated the use of many standard IR methods for bug localization including VSM and Smoothed Unigram Model (SUM)~\cite{Rao:2011:RSL:1985441.1985451}. In the IR community, VSM has a long history, proposed four decades ago by Salton et al.~\cite{SaltonWY75} and followed by many other IR methods including SUM and LDA, which address the limitations of VSM.
+
+%They showed that simpler IR techniques, i.e., VSM and SUM, outperforms more complex ones including LDA. %{\color{red}Later, Le et al. apply multiple topic models inferred by Latent Dirichlet Allocation algorithm for IR-based bug localization~\cite{LeWL13}.} In the IR community, historically, VSM is proposed very early (four decades ago by Salton et al.~\cite{SaltonWY75}), followed by many other IR techniques, including SUM and LDA, which address the limitations of VSM.
+
+More recently, a number of approaches which consider information aside from text in bug reports to better locate bugs were proposed. Sisman and Kak proposed a version history-aware bug localization method that considers past buggy files to predict the likelihood of a file to be buggy and uses this likelihood along with VSM to localize bugs~\cite{Sisman:2012:IVH:2664446.2664454}. Around the same time, Zhou et al.~\cite{Zhou:2012:BFM:2337223.2337226} proposed an approach named BugLocator that includes a specialized VSM (named rVSM) and considers the similarities among bug reports to localize bugs. Next, Saha et al.~\cite{SahaLKP13} developed an approach that considers the structure of source code files and bug reports and employs structured retrieval for bug localization, and it outperforms BugLocator. Wang and Lo proposed an approach that integrates the approaches by Sisman and Kak, Zhou et al. and Saha et al. for more effective bug localization~\cite{WL14}. Most recently, Ye et al. devised an approach named LR that combines multiple ranking features using learning-to-rank to localize bugs, and these features include surface lexical similarity, API-enriched lexical similarity, collaborative filtering, class name similarity, bug fix recency, and bug fix frequency~\cite{YeBL14}.
+%{\color{red}  Ye~et~al.
+%train word embeddings on API documents, tutorials, and reference documents to create additional semantic similarity features  for improving the effectiveness of IR-based bug localization~\cite{ye2016word}. Almhana~et~al. propose a multi-objective search  strategy leveraging  a fitness function that optimizes lexical-based similarity and
+%history-based similarity to recommend relevant classes given a bug report~\cite{almhana2016recommending}.
+%Wen~et~al. introduce \textit{Locus} that combine textual information from software changes hunks and source code files for locating bugs~\cite{wen2016locus}.
+%}
+
+ %The proposed approach named LR combines these ranking features by making use of an off-the-shelf learning-to-rank tool named SVM$^{rank}$.
+
+
+%Wang and Lo further extended their approach by using a weighted composition of multiple VSM variants whose weights are learned using a genetic algorithm~\cite{WangLL14}.
+
+All these approaches can be used as the AML$^\text{Text}$ component of our approach. In this work, we experiment with a basic IR technique namely VSM. Our goal is to show that even with the most basic IR-based bug localization component, we can outperform existing approaches including the state-of-the-art IR-based approach by Ye et al.~\cite{YeBL14}.
+
+\subsection{Spectrum-Based Bug Localization} 
+
+Various spectrum-based bug localization approaches have been proposed~\cite{JH05,Abreu:2009,LuciaLJB10,LuciaLJTB14, Libl+05,LYFHM05,Artzi2010,Artzi:2010:PFL:1806799.1806840,ZH02,Zeller2002a,CZ05,LuciaLX14}. These approaches analyze a program spectra which is a record of program elements that are executed in failed and successful executions, and generate a ranked list of program elements. Many of these approaches propose various formulas that can be used to compute the suspiciousness of a program element given the number of times it appears in failing and successful executions.
+
+% Rephrase needed
+Jones and Harrold proposed Tarantula that uses a suspiciousness score formula to rank program elements~\cite{JH05}. Later, Abreu et al. proposed another suspiciousness formula called Ochiai~\cite{Abreu:2009}, which outperforms Tarantula. Then, Lucia et al. investigated 40 different association measures and highlighted that some of them including Klosgen and Information Gain are promising for spectrum-based bug localization~\cite{LuciaLJB10,LuciaLJTB14}. Recently, Xie et al. conducted a theoretical analysis and found that several families of suspiciousness score formulas outperform other families~\cite{XieCKX13}. Next, Yoo proposed to use genetic programming to generate new suspiciousness score formulas that can perform better than many human designed formulas~\cite{Yoo12}. Subsequently, Xie et al. theoretically compared the performance of the formulas produced by genetic programming and identified the best performing ones~\cite{XieKCYH13}. Most recently, Xuan and Monperrus combined 25 different suspiciousness score formulas into a composite formula using their proposed algorithm named MULTRIC, which performs its task by making use of an off-the-shelf learning-to-rank algorithm named RankBoost~\cite{XuanM14}. MULTRIC has been shown to outperform the best performing formulas studied by Xie et al.~\cite{XieCKX13} and the best performing formula constructed by genetic programming~\cite{Yoo12,XieKCYH13}.
+%{\color{red} More recently, Laghari~et~al. propose a variant of spectrum-based fault localization called as \textit{patterned spectrum analysis}, which leverages patterns of
+%	method calls by means of frequent itemset mining~\cite{laghari2016fine}.
+%Le~et~al. leverage  likely invariants inferred from  execution traces of passed and failed test cases and propose a learning-to-rank based framework called \textit{Savant} for localizing bugs~\cite{savant}. {\color{red} Pearson et~al. evaluate the effectiveness of 10 state-of-the-art bug localization techniques on more than 300 real faulty software program, as well as design a number of new mutation based bug localization techniques that are significantly more effective than existing existing approaches~\cite{PearsonCJFAEPK2017}.}
+%}
+
+%Later, Abreu et al. proposed another suspiciousness formula called Ochiai~\cite{Abreu:2009.jss}, which outperforms Tarantula. This formula is based on the intuition that program elements that are executed more often in failed executions than successful ones are more likely to be buggy.
+%Next, Lucia et al. investigated the effectiveness of 40 different association measures proposed in the data mining community and highlighted that some of them including Klosgen and Information Gain are promising for spectrum-based bug localization~\cite{LuciaLJTB14}.
+
+%~\cite{YooHC13}
+%Artzi et al. addressed the issue of insufficient test cases for fault localization by a directed test generation technique~\cite{ADTP10a}. After the test cases were generated, they used Ochiai to evaluate their approach. Artzi et al. proposed another approach that extended Tarantula for debugging web applications~\cite{ArtziDTP10}.
+
+%Aside from the above approaches that compute suspiciousness scores to program elements based on program spectra, there are many other approaches that also use program execution traces to localize bugs.  Zeller and Hildebrandt proposed Delta Debugging that generates failure-inducing inputs by performing a binary-search over the search space of possible inputs~\cite{ZH02}. Zeller applied Delta Debugging to analyze a failed and a successful execution trace to find the minimum state difference between them~\cite{Zeller2002a}. Cleve and Zeller proposed another tool named AskIgor which extends Delta Debugging with cause transitions, i.e., program locations where variables become new failure causes~\cite{CZ05}.
+
+Many of the above mentioned approaches that compute suspiciousness scores of program elements can be used in the AML$^\text{Spectra}$ component of our proposed approach. In this work, we experiment with a popular spectrum-based fault localization technique namely Tarantula, published a decade ago, which is also used by PROMESIR~\cite{PoshyvanykGMAR07}. Our goal is to show that even with a basic spectrum-based bug localization component, we can outperform existing approaches including the state-of-the-art spectrum-based approach by Xuan and Monperrus~\cite{XuanM14}.
+
+
+
+\subsection{Other Related Studies} 
+
+There are many studies that compose multiple methods together to achieve better performance. For example, Kocaguneli et al. combined several single software effort estimation models to create more powerful multi-model ensembles~\cite{kocaguneli2012value}. Also, Rahman et al. used static bug-finding in order to improve the performance of statistical defect prediction (and vice versa)~\cite{rahman2014comparing}. Le~et~al. proposed SpecForge that combines different automaton based specification miners using  model fission and model fusion in order to create a more effective specification miner~\cite{le2015synergizing}.
+Kellogg~et~al. presents \textit{N-Prog} that combines static bug detection and test case generation to avoid unnecessary human effort~\cite{Kellogg16}. In particular, \textit{N-Prog} produces no false alarms, by construction, since its output alarm is either a new test case or a bug in a program.
+
+Recently, Perez~\cite{Perez:2017:TDM:3097368.3097446} proposed a new metric to quantify a test suite's diagnosability for spectrum-based fault localization. The goal is to optimize the effort to diagnose fault via spectrum-base techniques and guide the balance between unit tests and system test. On the other hand, Pearson~\cite{PearsonCJFAEPK2017} identified which fault localization techniques are the best of at finding real bugs and defined a new hybrid method that combining the best fault localization techniques based on 395 actual bugs. Wong~\cite{wong2016survey} provided a comprehensive overview of spectrum-fault localization techniques, and pointed out critical issues of software fault localization approach. 
+
+%Additionally, there are  studies on the effectiveness of bug localization. Recently, Le et al. propose many frameworks to predict the effectiveness of IR-based and spectrum-based bug localization tools~\cite{LeL13,LeTL14,le2014should}.}

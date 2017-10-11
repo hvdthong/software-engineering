@@ -1,0 +1,74 @@
+
+
+%\begin{table}[!htb]
+%	\centering
+%	\caption{Effect of Varying Number of Neighbors on the Effectiveness of $AML$. $n=\infty$ Means That We Use the Whole Training Data to Tune the Weights.}
+%    \begin{tabular}{|l|c|}
+%    \hline
+%    \textbf{\# Neighbors }       & \textbf{MAP} \\\hline
+%    \hline
+%$n=5$&0.223\\\hline
+%$n=10$&0.237\\\hline
+%$n=15$&0.237\\\hline
+%$n=20$&0.227\\\hline
+%$n=25$&0.224\\\hline
+%  \hline
+%$n=\infty$&0.222\\\hline
+%
+%
+%    \end{tabular}
+%    \label{tab:varying_neighbors}
+%\end{table}
+
+%To answer this research question, we vary the number of neighbors $K$ from 5 to all bugs in the training data (i.e., $K=\infty$). The results with varying numbers of neighbors is shown in Table~\ref{tab:varying_neighbors}. We can see that, as we increase $K$, the performance of AML increases until a certain point. When we use a large $K$, the performance of AML decreases. This suggests that in general including more neighbors can improve performance. However, an overly large number of neighbors may lead to an increased level of noise (i.e., the number of non-representative neighbors), resulting in a degraded performance. The differences in the Top N and MAP scores are small though.
+
+To address this research question, we varied the number of nearest neighbors from $K=5$ to all bug reports in the training set (i.e., $K=\infty$) for both NetML and AML. The results are shown in Table~\ref{tab:varying_neighbors}. We can see that, as we increase $K$, the performance of both multi-modal techniques improves until a certain point (i.e., $K=15$), and decreases beyond that. This suggests that including more neighbors can improve performance to some extent. However, an overly large number of neighbors may lead to an increased level of noise (i.e., the number of irrelevant neighbors), resulting in a degraded performance. Nevertheless, the differences in the top N and MAP scores are fairly marginal, which justifies the robustness of our NetML approach. Looking at Table~\ref{tab:varying_neighbors}, it is also clear that NetML consistently outperforms AML for all $K$ values (i.e., from $K=5$ to $K=\infty$).
+
+%In AML*, the performances of $K$ from 5 to 20 do not show significant difference since AML* considers the similarity properties of different bug reports and methods. However, the performance of two evaluation metrics (i.e., top N and MAP) also decreases because of the noise from large number of neighbors. 
+
+%{\color{red} Overall, the effectiveness of AML increases and decreases  according to $K$, but the difference is not much, our approach still achieves comparable performance in various settings of $K$.}
+
+%\begin{table}[!htb]
+%	\centering
+%	\caption{Effect of Varying Number of Neighbors (K) -- AML*}
+%    \begin{tabular}{|l|c|c|c|c|}
+%    \hline
+%    \textbf{\#Neighbors }       & \textbf{Top 1} &\textbf{Top 5} &\textbf{Top 10} & \textbf{MAP} \\\hline
+%    \hline
+%     $K=5$&45&82&102&0.272\\\hline
+%     $K=10$&46&82&100&0.270\\\hline
+%     $K=15$&46&83&101&0.272\\\hline
+%     $K=20$&47&82&101&0.269\\\hline
+%     $K=25$&44&81&101&0.264\\\hline
+%     \hline
+%     $K=\infty$&39&75&96&0.261\\\hline
+%    \end{tabular}
+%    \label{tab:varying_neighbors}
+%\end{table}
+
+\begin{table*}
+	\centering
+	\caption{Effect of varying the number of nearest neighbors on NetML and AML}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+	\hline 
+	\multirow{2}{*}{\textbf{\#Neighbors}} & \multicolumn{2}{c|}{\textbf{Top 1}} & \multicolumn{2}{c|}{\textbf{Top 5}} & \multicolumn{2}{c|}{\textbf{Top 10}} & \multicolumn{2}{c|}{\textbf{MAP}}\\
+	\cline{2-9} 
+	& \textbf{NetML} & \textbf{AML} & \textbf{NetML} & \textbf{AML} & \textbf{NetML} & \textbf{AML} & \textbf{NetML} & \textbf{AML}\\
+	\hline 
+	\hline
+	$K=5$ & 112   & 84    & 225   & 181   & 254   & 212   & 0.342 & 0.289 \\
+	$K=10$ & 116   & 88    & 226   & 179   & 255   & 213   & 0.347 & 0.291 \\
+	$K=15$ & 117   & 86    & 228   & 175   & 255   & 212   & 0.347 & 0.291\\
+	$K=20$ & 115   & 86    & 220   & 173   & 251   & 210   & 0.345 & 0.29 \\
+	$K=25$& 110   & 81    & 220   & 173   & 251   & 209   & 0.331 & 0.285 \\
+	$K=\infty$  & 110   & 79    & 212   & 169   & 251   & 205   & 0.329 & 0.283 \\
+	\hline
+\end{tabular}
+
+\label{tab:varying_neighbors}
+\end{table*}
+
+
+
+
+%In this research question, we inspect the effect of varying number of selected neighbors $n$ for training the best weights. At first, we examine the performance of $AML$ when amount of training data is small. Thus, we choose value of 5 for $n$, which is largely far from default value of $n$ ($n=20$). Next, we increase value of $n$ from 5 to 15 to observe the changes in performance. On the other hand, we also evaluate the performance of $AML$ when amount of training data is relatively larger than the default value ($n=20$). Hence, we rise the value of $n$ to 25, and 35. Notice that Rhino uses all the bugs in training data for estimating best weights when $n=25$, and $n=35$. Similarly, Lucene uses all the bugs in training data for computing best weights when $n=35$. Finally, we inspect the case when the whole training data is used to find the best weights. This case is equivalent to the case where the value of $n$ is very large. Table \ref{tab:varying_neighbors} demonstrates the effect of varying values of $n$. According to the table, performance of $AML$ reduces when the value of $n$ decreases ($n=5$, and $n=15$). Similarly, performance of $AML$ increases when the value of $n$ getting larger ($n=25$, $n=30$, and $n=35$).  That implies when $n$ is relatively large, amount of training data is sufficient to determine the best weights. Nevertheless, amount of training data is too large, the determined best weights contains noise, which reduces the performance of $AML$. In Table~\ref{tab:varying_neighbors}, when $n=all$  has better performance than the default value of $n$, but $n=35$ has the best performance. 

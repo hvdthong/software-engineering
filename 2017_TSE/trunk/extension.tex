@@ -1,0 +1,250 @@
+%\recheck{Richard: May you read this section to see whether my explanation is correct? Thank you :)}
+%
+%\recheck{Richard: Please let's me know whether section 3.2 and 3.3 are consistent.}
+
+As we mention in Section~\ref{sec.intro}, \underline{A}daptive \underline{M}ulti-modal bug \underline{L}ocalization (AML)~\cite{Le:2015:IRS:2786805.2786880} remains two main issues. Firstly, AML only proposes the concept of latent parameter for bug reports. In particular, every method $m$ share the same bug report parameter when estimating the suspiciousness scores of $m$, without considering the method parameter. Hence, AML may not capture the properties of different methods, leading to limit its effectiveness of detecting bug. Secondly, the latent paprameter of each bug report is learned independently of other bug report, without exploiting the clustering and/or similarity properties of different bug reports and methods. In practice, some bug reports as well as methods are similar to other bug reports/methods. However, AML simply ignores the relationship between bug reports and methods. 
+
+In light of these issues, we propose a new algorithm, namely \underline{N}etwork-clustered \underline{M}ulti-modal Bug \underline{L}ocalization (NetML). More specifically, NetML tries to addresses these two shortcomings by performing joint optimization of localization loss function and clustering of both bug reports and methods, and hence NetML involves two extensions. In this section, we focus on the first extension of NetML, trying to integrates two sets of latent parameters (i.e., bug reports and methods) to localize bug more accurately. In particular, NetML redefine the suspiciousness score of method $m$ given by bug reports $b$ as an interaction between a bug report’s parameter vector $u_b$ and a method’s parameter vector $v_m$, as follows:
+
+%The first is to redefine the suspiciousness score of method $m$ given by bug reports $b$ as an interaction between a bug report’s parameter vector $u_b$ and a method’s parameter vector $v_m$. In particular, NetML 
+%We propose \underline{N}etwork-clustered \underline{M}ulti-modal Bug \underline{L}ocalization (NetML) that involves two extensions. The first is to redefine the suspiciousness score of method $m$ given by bug reports $b$ as an interaction between a bug report’s parameter vector $u_b$ and a method’s parameter vector $v_m$, as follows: 
+%The first is to redefine the function of suspiciousness score (see equation \ref{eqn:composite}) as an interaction between a bug report’s parameter vector $u_b$ and a method’s parameter vector $v_m$, as follows:
+\begin{align}
+\label{eq:aml_plus}
+f(x_{i}, u_b, v_m) & = \sum_{j = 1}^{J} (u_{b,j} + v_{m,j}) x_{i,j} \nonumber \\
+& = \sum_{j = 1}^{J} u_{b,j} x_{i,j} + \sum_{j = 1}^{J} v_{m,j} x_{i,j}
+\end{align}
+where $x_i$ is denoted as feature vector of specific method $m$ given bug report $b$ and program spectra $p$ (i.e., $b, p, m$). $J$ is a number of features, hence $J = 3$ in our model since we only have three components NetML$^\text{Text}$, NetML$^\text{Spectra}$ and NetML$^\text{SuspWord}$ (see Figure~\ref{fig:framework}). Different to the original multi-modal technique (i.e., AML), each feature vector ($b, p, m$) not only considers the parameter of bug report $b$ but also share the parameter of method $m$.
+
+
+
+%In light of these issues, we propose a new algorithm, namely \underline{N}etwork-clustered \underline{M}ulti-modal Bug \underline{L}ocalization (NetML). More specifically, NetML tries to addresses these two shortcomings by performing joint optimization of localization loss function and clustering of both bug reports and methods. Firstly, NetML integrates two sets of latent parameters (i.e., bug reports and methods) to localize bug more accurately. Secondly, NetML takes advantage of network Lasso regularization~\cite{Hallac:2015:NLC:2783258.2783313} to enforce similar bug reports as well as methods to have similar latent parameters. Thus, the proposed approaches may achieve a more effective bug localization. 
+%
+%In the following section, we firstly present a short introduction about network Lasso, and briefly explain our proposed algorithm, i.e., NetML. 
+%
+%
+%%Firstly, for each bug report $b$, a fixed parameter vector $\vec{\theta}_b = (\alpha, \beta, \gamma)$ is inferred for all methods $m$ (see Equation~\ref{eqn:composite}). 
+%%In other words, every method $m$ shares the same parameter vector $\vec{\theta}_b$ when estimating the suspiciousness scores of $m$ according to bug report $b$ and program spectra $p$. In particular, each method $m$ not only considers the parameter of bug report $b$ but also share the parameter of method $m$. 
+%%Therefore, Equation~\ref{eqn:composite} does not accurately reflect the suspiciousness score of method $m$ given bug report $b$ and program spectra $p$. Secondly, the parameter vector $\vec{\theta}_b$ of a bug report is learned independently of other bug report $b'$, without exploiting the clustering and/or similarity properties of different bug reports and methods. In practice, some bug reports as well as methods are similar to other bug reports/methods. However, the instance-wise loss function in equation \ref{eq:instance-wise-loss} ignores the relationship between the bug reports and the methods. In light of these issues, we proposed a new algorithm, namely generalized adaptive multi-modal bug localization, to tackle these problems in bug localization. 
+%
+%%Our proposed algorithm is inspired by network lasso \cite{Hallac:2015:NLC:2783258.2783313}. In the next sub section, I briefly present a short introduction about network lasso, then explain the proposed algorithm, i.e. \underline{G}eneralized \underline{A}daptive \underline{M}ulti-modal bug \underline{L}ocalization (AML*).
+%
+%\subsubsection{Network Lasso}\label{subsec:networklasso}
+%
+%Nowadays, convex optimization has become a popular way of modeling problems in many different fields (i.e., clock synchronization, smart power grids, state estimation, etc.). However, classical methods of convex analysis, relying on interior point methods~\cite{Renegar:2001:MVI:502968}, begin to fail due to a lack of scalability since datasets is getting larger and more intricate. The challenge of large-scale optimization lies in developing methods general enough to work well independent of the input, while being capable of scaling to the immense datasets that today’s applications require. In~\cite{Hallac:2015:NLC:2783258.2783313}, Hallac et al. proposed a network setting, namely network Lasso, that allows for simultaneous clustering and optimization on graph. In particular, given a graph $\mathcal{G}=(\mathcal{V}, \mathcal{E})$, where $\mathcal{V}$ is the vertex set and $\mathcal{E}$ is the edges of graph. The network Lasso problem is defined as following: 
+%
+%%Therefore, it is necessary to formulate general classes of convex optimization solvers, ones that can apply to a variety of interesting and relevant problems, and to develop algorithms for reliable and efficient solutions.
+%
+%%Network Lasso~\cite{Hallac:2015:NLC:2783258.2783313} is a generalization of the group lasso to a network setting that allows for simultaneous clustering and optimization on graphs. In~\cite{Hallac:2015:NLC:2783258.2783313}, Hallac et al. focused on optimization problem posed on graph. Given a graph $\mathcal{G}=(\mathcal{V}, \mathcal{E})$, where $\mathcal{V}$ is the vertex set and $\mathcal{E}$ is the edges of graph. The network lasso problem is defined as following: 
+%\begin{align}
+%\label{eq:network_lasso}
+%	minimize \sum_{i \in \mathcal{V}}^{} f_i(x_i) + \lambda \sum_{(j, k) \in \mathcal{E}}^{} w_{jk} \|x_j - x_k \|_{2}	
+%\end{align}
+%The variable are $x_1, \dots, x_n \in R^{p}$, where $n = |\mathcal{V}|$. $x_i \in R^{p}$ is the variable at node $i$, $f_i$ is the cost function at node $i$, $w_{jk}$ is the relative weights among the edges $(j,k)$ of the network $\mathcal{G}$, and $\lambda$ is an overall parameter that scales the edge objectives relative to the node objectives. In order to solve the problem \ref{eq:network_lasso} in a distributed and scalable manner, which allows for guaranteed global convergence even on large graphs, the author based on the Alternating Direction Method of Multipliers (ADMM)~\cite{Parikh:2014:PA:2693612.2693613, Boyd:2011:DOS:2185815.2185816}. With ADMM, each individual component solves its own private objective function, passes this solution to its neighbors, and repeats the process until the entire network converges. 
+
+\subsection{Optimization Objective}
+\label{subsec:extension}
+%NetML takes advantage of network Lasso regularization~\cite{Hallac:2015:NLC:2783258.2783313} to enforce similar bug reports as well as methods to have similar latent parameters
+The second extension takes advantage of network Lasso regularization~\cite{Hallac:2015:NLC:2783258.2783313} to enforce similar bug reports as well as methods to have similar latent parameters. Different from the original network Lasso that only deals with a single graph, our approach involves optimizing over two graphs simultaneously. Specifically, we consider a joint optimization over the bug
+similarity graph $\mathcal{G}^B=\{e_{b,b'}|(b, b') \in B\}$, and method similarity graph $\mathcal{G}^M=\{e_{m,m'}|(m, m') \in M\}$.
+
+With the new model parameterization and similarity graphs taken into account, we propose a new dual network Lasso-regularized loss function as following:
+\begin{align}
+\label{eq:NL_lossfunc}
+	\mathcal{L}_i & = -\sum_{b=1}^{B}\sum_{m=1}^{M} w_i \bigg[y_i log(\sigma(f(x_i, u_b, v_m))) \nonumber\\
+	& + (1 - y_i) log(1- \sigma(f(x_i, u_b, v_m))) \bigg] \nonumber\\
+	& + \frac{\alpha}{2} \sum_{j=1}^{J} \bigg[\sum_{b=1}^{n_{B}} u_{b,j}^2 + \sum_{m=1}^{n_{M}} v_{m,j}^2 \bigg] \nonumber\\
+	& + \frac{\beta}{2} \sum_{j=1}^{J} \bigg[ \sum_{(b, b' \in \mathcal{G}^B)}^{} e_{b, b'} (u_{b,j} - u_{b', j})^2 \nonumber\\ 
+	& + \sum_{(m, m' \in \mathcal{G}^M)}^{} e_{m, m'} (u_{m,j} - u_{m', j})^2 \bigg]
+\end{align}
+where $B$ and $M$ are the number of bug reports and methods in our dataset, $u_b$ and $v_m$ are called the parameter vector of bug reports and methods respectively, $y_i$ denotes the label of method $m$ given bug report $b$, $\sigma(x_i)$ is the logistic function \cite{Collins:2002:LRA:599615.599689}, $w_i$ used to automatically adjust weights inversely proportional to class frequencies in the training data. In NetML, $w_i$ is applied to solve the skewed distribution problem in bug localization task, i.e., the number of positive labels is much smaller than the number of negative labels. $\alpha$ and $\beta$ are the learning rate of regularization in our loss function. Intuitively, the implication of the network lasso regularization is straightforward—the more similar two bug reports (or two methods) are, the closer their parameter vectors (i.e., $u_b$ and $v_m$) should be. 
+
+To minimize $\mathcal{L}_i$, we employ a Newton method \cite{doi:10.1137/1.9780898718898} stemming from a second-order Taylor series expansion of the loss function $\mathcal{L}_i$, which are defined as following:
+
+\begin{align}
+\label{eq:newton}
+	\mathcal{L}_i(\theta) = \mathcal{L}_i(\theta_0) + \triangledown \mathcal{L}_i(\theta_0) (\theta - \theta_0) + \frac{\triangledown^2 \mathcal{L}(\theta_0)}{2} (\theta - \theta_0)^2
+\end{align}
+
+The minimal of $\mathcal{L}_i$ can be obtained by taking the (partial) derivative of $\mathcal{L}(\theta)$ and equating it to zero:
+\begin{align}
+0 &= \triangledown \mathcal{L}_i(\theta_0) + \triangledown^2 \mathcal{L}_i(\theta_0) (\theta - \theta_0) \nonumber\\
+\theta &= \theta_0 - \frac{\triangledown \mathcal{L}_i(\theta_0)}{\triangledown^2 \mathcal{L}_i(\theta_0)}
+\end{align}
+
+If we take $\theta_0$ as the old estimate of $u_{b,j}$ or $v_{m,j}$, this leads to the following update procedures:
+\begin{align}
+\label{eqn:update_u}
+u_{b,j} &\leftarrow u_{b,j} - \frac{ \triangledown \mathcal{L}_i(u_{b,j}) }{ \triangledown^2 \mathcal{L}_i(u_{b,j}) } \\
+\label{eqn:update_v}
+v_{m,j} &\leftarrow v_{m,j} - \frac{ \triangledown \mathcal{L}_i(v_{m,j}) }{ \triangledown^2 \mathcal{L}_i(v_{m,j}) }
+\end{align}
+
+In turn, we need to compute the first and second derivatives of each parameter $u_{b,j}$ and $v_{m,j}$. For the bug report parameter $u_{b,j}$, the first and second derivatives are respectively:
+\begin{align}
+\label{eqn:grad_u}
+\triangledown \mathcal{L}_i(u_{b,j}) &= \sum_{m=1}^{n_{M}} \left[ w_{i} (\sigma(f(x_i, u_b, v_m)) - y_{i}) x_{i,j} \right] \nonumber \\
+&+ \alpha u_{b,j} + \beta \sum_{b'} \left[ e_{b,b'} \left( u_{b,j} - u_{b',j} \right) \right] \\
+\label{eqn:hess_u}
+\triangledown^2 \mathcal{L}_i(u_{b,j}) &= \sum_{m=1}^{n_{M}} \left[ w_{i} \sigma(f(x_i, u_b, v_m)) ( 1 - \sigma_{i}) x_{i,j}^2 \right] \nonumber \\
+&+ \alpha + \beta \sum_{b'} e_{b,b'}
+\end{align}
+
+Similarly, we can compute the first and second derivatives w.r.t each method parameter $v_{m,j}$ as:
+\begin{align}
+\label{eqn:grad_v}
+\triangledown \mathcal{L}_i(v_{m,j}) &= \sum_{b=1}^{n_{B}} \left[ w_{i} (\sigma(f(x_i, u_b, v_m)) - y_{i}) x_{i,j} \right] \nonumber \\
+& + \alpha v_{m,j} + \beta \sum_{m'} \left[ e_{m,m'} \left( v_{m,j} - v_{m',j} \right) \right] \\
+\label{eqn:hess_v}
+\triangledown^2 \mathcal{L}_i(v_{m,j}) &= \sum_{b=1}^{n_{B}} \left[ w_{b,m} \sigma_{b,m} ( 1 - \sigma_{b,m}) x_{i,j}^2 \right] \nonumber \\
+& + \alpha + \beta \sum_{m'} e_{m,m'}
+% \label{eqn:grad_v}
+% \triangledown \mathcal{L}(v_{m,j}) &= \sum_{b=1}^{n_{B}} \left[ (\sigma_{b,m} - y_{b,m}) u_{b,j} x_{b,m,j} \right] + \alpha v_{m,j} + \beta \sum_{m'} \left[ e_{m,m'} \left( v_{m,j} - v_{m',j} \right) \right] \\
+% \label{eqn:hess_v}
+% \triangledown^2 \mathcal{L}(v_{m,j}) &= \sum_{b=1}^{n_{B}} \left[ \sigma_{b,m} ( 1 - \sigma_{b,m}) u_{b,j}^2 x_{b,m,j}^2 \right] + \alpha + \beta \sum_{m'} e_{m,m'}
+\end{align}
+
+Finally, the update formula for $u_{b,j}$ can be obtained by substituting equation \ref{eqn:grad_u} and \ref{eqn:hess_u} into equation \ref{eqn:update_u}. Likewise, by substituting equation \ref{eqn:grad_v} and \ref{eqn:hess_v} into \ref{eqn:update_v} to update formula $v_{m,j}$. To learn the model parameters, we use a \emph{Newton method} that updates the parameters on a per-feature $j$ basis.
+%Starting from a random initial values of $u_{b,j}$ and $v_{m,j}$, we first update $u_{b,j}$ by assuming that all $v_{m,j}$ are fixed. We then alternate by updating $v_{m,j}$ with all $u_{b,j}$ assumed to be fixed.
+
+\subsection{Learning Procedure}
+\label{sec:learning}
+
+\begin{algorithm*}[!t]
+	\begin{algorithmic}[1]
+		\Require Matrix $X \in \mathbb{R}^{B \times M \times 3}$, where $B$ and $M$ are the number of bug reports and methods in our training data. Each cell in 3-D matrix is a vector $x_{b,m} = [\text{NetML}^{\text{Text}}(b,m), \text{NetML}^{\text{Spectra}}(p,m), \text{NetML}^{\text{SuspWord}}(b,p,m)]$ for given bug report $b$, program spectra $p$, and method $m$, label vector $y \in \mathbb{R}^{B \times M}$ (each element $y_{b, m}$ is the label of $x_{b, m}$), sample weight $w \in \mathbb{R}^{B \times M}$, learning rate $\eta$, regularization parameter $\alpha$ and $\beta$, maximum training iterations $T_{max}$
+		\Ensure Weight parameters $U \in \mathbb{R}^{B \times 3}$ and $ V \in \mathbb{R}^{M \times 3}$ 
+		\State Initialize all parameters $u_{b,j} \leftarrow 0$ and $v_{m,j} \leftarrow 0$
+		\State Precompute constant terms $q_b \leftarrow \sum_{b'} e_{b,b'}$ and $q_m \leftarrow \sum_{m'} e_{m,m'}$
+		\State Set the initial learning rate $\eta \leftarrow 1$
+		\Repeat 
+		\State Compute all predictions $\sigma(f(x_{b,m}, u_b, v_m))$ (see equation \ref{eq:aml_plus})
+		\State $\mathcal{L}_{prev} \leftarrow -\sum_{b} \sum_{m} w_{b,m} \big[ y_{b,m} \log \big( \sigma(f(x_{b,m}, u_b, v_m)) \big) + \big( 1 - y_{b,m} \big) \log \big(1 - \sigma(f(x_{b,m}, u_b, v_m)) \big) \big]$
+		\For {each $j \in \{ 1,\ldots,3 \}$}
+		\State \textbf{/* Update all $u_{b,j}$ */}
+		\For {each $b \in \{ 1,\ldots,B \}$}
+		\State $p_{b} \leftarrow \sum_{b'} e_{b,b'} u_{b',j}$
+		\EndFor
+		\For {each $b \in \{ 1,\ldots,B \}$}
+		\State $b_{num} \leftarrow \sum_{m=1}^{M} \big[ w_{b,m} (\sigma(f(x_{b,m}, u_b, v_m)) - y_{b,m}) x_{b,m,j} \big] + \beta \big[ u_{b,j} q_b - p_{b} \big] + \alpha u_{b,j}$
+		\State $b_{deno} \leftarrow \sum_{m=1}^{M} \big[ w_{b,m} \sigma(f(x_{b,m}, u_b, v_m)) (1 - \sigma(f(x_{b,m}, u_b, v_m)) x_{b,m,j}^2 \big] + \beta q_b + \alpha$
+		\State $u_{b,j} \leftarrow u_{b,j} - \eta \left( \frac{b_{num}}{b_{deno}} \right)$
+		\EndFor
+		
+		\State \textbf{/* Update all $v_{m,j}$ */}
+		\For {each $m \in \{ 1,\ldots,M \}$}
+		\State $p_{m} \leftarrow \sum_{m'} e_{m,m'} v_{m',j}$
+		\EndFor
+		
+		\For {each $m \in \{ 1,\ldots,M \}$}
+		\State $v_{num} \leftarrow \sum_{b=1}^{B} \big[ w_{b,m} (\sigma(f(x_{b,m}, u_b, v_m)) - y_{b,m}) x_{b,m,j} \big] + \beta \big[ v_{m,j} q_m - p_{m} \big] + \alpha v_{m,j}$
+		\State $v_{deno} \leftarrow \sum_{b=1}^{B} \big[ w_{b,m} \sigma(f(x_{b,m}, u_b, v_m)) (1 - \sigma(f(x_{b,m}, u_b, v_m))) x_{b,m,j}^2 \big] + \beta q_m + \alpha$
+		\State $v_{m,j} \leftarrow v_{m,j} - \eta \left( \frac{v_{num}}{v_{deno}} \right)$
+		\EndFor
+		\EndFor
+		\State Compute all predictions $\sigma(f(x_{b,m}, u_b, v_m)$
+		\State $\mathcal{L}_{curr} \leftarrow -\sum_{b} \sum_{m} w_{b,m} \big[ y_{b,m} \log \big( \sigma(f(x_{b,m}, u_b, v_m)) \big) + \big( 1 - y_{b,m} \big) \log \big(1 - \sigma(f(x_{b,m}, u_b, v_m)) \big) \big]$
+		\State $\eta \leftarrow
+		\begin{cases}
+		\frac{\eta}{2},   & \text{if } \mathcal{L}_{curr} > \mathcal{L}_{prev}\\
+		\min(1, 2 \eta),  & \text{otherwise}
+		\end{cases}$
+		\Until $T_{max}$ iterations
+	\end{algorithmic}
+	\caption{Parameters learning for generalized adaptive multi-modal bug localization}
+	\label{alg:network_lasso}
+\end{algorithm*}
+
+\begin{algorithm}
+	\begin{algorithmic}[1]
+		\Require Matrix $X \in \mathbb{R}^{B \times M \times 3}$, where $B$ and $M$ are the number of bug reports and methods in our training data. Bug reports graph $\mathcal{G}^B=\{e_{b,b'}|(b, b') \in B\}$, , where $e_{b,b'}$ represents textual similarity between $b$ and $b'$.
+		\State folds $\leftarrow$ cross\_validation($\mathcal{G}^B.vertex$)
+		\For {\textit{test} in folds}
+		\State $B_{test}$ $\leftarrow$ $\mathcal{G}^B[test]$
+		\For {each $b \in B_{test}$ }
+		\State Finding top-K most similarity bug reports of $b$
+		\State Construct matrix $X_{train} \in {B_{topK} \times M \times 3}$
+		\State Calling Algorithm~\ref{alg:network_lasso} for matrix $X_{train}$ with default parameters
+		\State Predict all methods given by particular bug report $b$ 
+		\EndFor 
+		\EndFor
+	\end{algorithmic}
+	\caption{Prediction procedure for localize bug report}
+	\label{alg:prediction}
+\end{algorithm}
+
+Algorithm \ref{alg:network_lasso} summarizes our learning procedure to localize bug reports. For each feature component, NetML includes two basic steps: we first update bug report parameter vector (see step 8 of algorithm \ref{alg:network_lasso}) by applying equation~\ref{eqn:update_u}, and then update method parameter vector (in step 17) by employing equation~\ref{eqn:update_v}. For computational efficiency, we precompute the constant terms $q_b = \sum_{b'} e_{b,b'}$ and $q_m = \sum_{m'} e_{m,m'}$ before the Newton iterations begins. During each Newton iteration, we also calculate the terms $\sum_{b'} e_{b,b'} u_{b',j}$ and $\sum_{m'} e_{m,m'} v_{m',j}$ for each feature $j$.
+
+To predict method $m$ given by a new bug report $b$ and program spectra $p$, we base on a set of top-K historical fixed bugs in a training data that are the most similar to $b$. We find these top-K nearest neighbors by measuring the textual similarity of $b$ with training (historical) bug reports using the vector space model. These top-K nearest neighbors are used to construct our NetML model. Note that the prediction steps are similar to~\cite{Le:2015:IRS:2786805.2786880}.
+
+In step 4 of Algorithm~\ref{alg:network_lasso}, we repeat maximum training iterations until $T_{max}$. For each feature $j$ component in each iteration (see step 7), we update the bug report and method parameters across all bug reports $B$ and methods $M$ (in step 12 and step 21). Moreover, given a new bug report $b$, we only select top-K nearest neighbors that are most similar to $b$. Hence, time complexity of our proposed algorithm is $\text{O}(T_{max} \times Btest \times J \times (K + M))$, where $Btest$ is the number of bug reports in testing data, and $J$ is the number of features in our algorithm, thus $J = 3$ as we only have three feature components (i.e., $\text{NetML}^{\text{Text}}, \text{NetML}^{\text{Spectra}}, \text{NetML}^{\text{SuspWord}}$). Based on the time complexity, the space complexity of our proposed algorithm should be $\text{O}(Btest \times J \times (K + M))$ by discarding the number of iteration $T_{max}$.
+
+\recheck{@Richard: please take a look at this section to see whether we need further clarification}
+
+\subsection{Feature Engineering}\label{subsec:both}
+
+NetML$^\text{Spectra}$ processes only the program spectra information using a spectrum-based bug localization technique described in Section~\ref{sec.prelim}. NetML$^\text{Spectra}$ in the end outputs a score for each method in the corpus. Given a program spectra $p$ and a method $m$ in a corpus $C$, NetML$^\text{Spectra}$ outputs a score that indicates how suspicious is $m$ considering $p$ which is denoted as NetML$^\text{Spectra}(p,m,C)$. By default, NetML$^\text{Spectra}$ uses Tarantula as the spectrum-based bug localization technique.
+
+NetML$^\text{SuspWord}$ processes both bug reports and program spectra, and computes the suspiciousness scores of words to rank methods. Given a bug report $b$, a program spectra $p$, and a method $m$ in a corpus $C$, NetML$^\text{SuspWord}$ outputs a score that indicates how suspicious is $m$ considering $b$ and $p$; this is denoted as NetML$^\text{SuspWord}(b,p,m,C)$. 
+
+The NetML$^\text{Integrator}$ component combines the NetML$^\text{Text}$, NetML$^\text{Spectra}$, NetML$^\text{SuspWord}$ components to produce the final ranked list of methods. Given a bug report $b$, a program spectra $p$, and a method $m$ in a corpus $C$, the adaptive integrator component outputs a suspiciousness score for method $m$ which is denoted as AML$(b,p,m,C)$.
+
+The NetML$^\text{Text}$ and NetML$^\text{Spectra}$  components reuse techniques proposed in prior works which are described in Section~\ref{sec.prelim}. In the next subsections, we briefly describe the components namely NetML$^\text{SuspWord}$ and the network-clustered integrator component.
+
+Parnin and Orso {highlighted} that ``future research could also investigate ways to automatically suggest or highlight terms that might be related to a failure''~\cite{ParninO11}, however they did not propose a concrete solution. We use Parnin and Orso's observation, which highlights that some words are indicative to the location of a bug, as a starting point to design our NetML$^\text{SuspWord}$ component. \iffalse NetML$^\text{SuspWord}$ component is designed based on this observation made by Parnin and Orso which highlights that some words are indicative to the location of a bug.\fi
+This component breaks down a method into its constituent words, computes the suspiciousness scores of these words, and composes these scores back to result in the suspiciousness score of the method. The process is analogous to a machine learning or classification algorithm that breaks a data point into its constituent features, assign weights or importance to these features, and use these features, especially important ones, to assign likelihood scores to the data point. The component works in three steps: mapping of methods to words, computing word suspiciousness, and composing word suspiciousness into method suspiciousness. We describe each of these steps in the following sections. 
+
+% component takes in a spectra and a bug report to compute the suspiciousness scores of words. The suspicious words are then used to rank methods. Different from the $AML^{SPECTRA}$ component that directly computes the suspiciousness scores of methods, this
+
+\subsubsection{Mapping of Methods to Words}
+In this step, we map a method to its constituent words. For every method, we extract the following textual contents including: (1) The name of the method, along with the names of its parameters, and identifiers contained in the method body; (2) The name of the class containing the method, and the package containing the class; (3) The comments that are associated to the method (e.g., the Javadoc comment of that method, and the comments that appear inside the method), and comments that appear in the class (containing the method) that are not associated to any particular method.
+
+After we have extracted the above textual contents, we apply the text pre-processing step described in Section~\ref{sec.prelim}. At the end of this step, for every method we map it to a set of pre-processed words. Given a method $m$, we denote the set of words it contains as $words(m)$.
+
+\subsubsection{Computing Word Suspiciousness}
+We compute the suspiciousness score of a word by considering the program elements that contain the word. Let us denote the set of all failing execution traces in spectra $p$ as $p.F$ and the set of all successful execution traces as $p.S$. To compute the suspiciousness scores of a word $w$ given spectra $p$, we define several sets:
+%\begin{eqnarray}
+%EF(w,p) = \{t \in p.F | \exists {m\in t}~s.t.~w\in words(m)\}\footnotemark[1]\nonumber\\
+%NF(w,p) = \{t \in p.F | \not\exists {m\in t}~s.t.~w\in words(m)\}\nonumber\\
+%ES(w,p) = \{t \in p.S | \exists {m\in t}~s.t.~w\in words(m)\}\nonumber\\
+%NS(w,p) = \{t \in p.S | \not\exists {m\in t}~s.t.~w\in words(m)\}\nonumber
+%\end{eqnarray}
+\begin{align*}
+EF(w,p) &= \{t \in p.F | \exists {m\in t}~s.t.~w\in words(m)\}\nonumber\\
+%NF(w,p) &= \{t \in p.F | \not\exists {m\in t}~s.t.~w\in words(m)\}\nonumber\\
+ES(w,p) &= \{t \in p.S | \exists {m\in t}~s.t.~w\in words(m)\}\nonumber
+%NS(w,p) &= \{t \in p.S | \not\exists {m\in t}~s.t.~w\in words(m)\}\nonumber
+\end{align*}
+The set $EF(w,p)$ is the set of execution traces in $p.F$ that contain a method in which the word $w$ appears. The set $ES(w,p)$ is the set of execution traces in $p.S$ that contain a method in which the word $w$ appears. Based on these sets, we can compute the suspiciousness score of a word $w$ using a formula similar to Tarantula as follows:
+\begin{equation}
+\text{SS}_{\text{word}}(w,p)=\frac{\frac{|EF(w,p)|}{|p.FAIL|}}{\frac{|EF(w,p)|}{|p.FAIL|}+\frac{|ES(w,p)|}{|p.SUCCESS|}}
+\label{eq:ss}
+\end{equation}
+
+Using the above formula, words that appear more often in methods that are executed in failing execution traces are deemed to be more suspicious than those that appear less often in such methods.
+
+%The set $NF(w,p)$ is the set of execution traces in $p.F$ that do not contain a method in which the word $w$ appears. The set $NS(w,p)$ is the set of execution traces in $p.S$ that do not contain a method in which the word $w$ appears.
+
+\subsubsection{Computing Method Suspiciousness}
+To compute a method $m$'s suspiciousness score, we compute the textual similarity between $m$ and the input bug report $b$, and consider the appearances of $m$ in the input program spectra $p$. In the textual similarity computation, the suspiciousness of words are used to determine their weights.
+
+First, we create a vector of weights that represents a bug report and another vector of weights that represents a method. Each element in a vector corresponds to a word that appears in either the bug report or the method. The weight of a word $w$ in document (i.e., bug report or method) $d$ of method corpus $C$ considering program spectra $p$ is:
+\begin{align*}
+\text{SSTFIDF}(w,p,d,C)=&\text{SS}_{\text{word}}(w,p)\times \log(f(w,d)+1)\\
+&\times \log\frac{|C|}{|{d_i\in C : w \in d_i }|}
+\end{align*}
+In the above formula, $\text{SS}_\text{word}(w,p)$ is the suspiciousness score of word $w$ computed by Equation~\ref{eq:ss}, $f(w,d)$ is the number of times word $w$ appears in document $d$, and $d_i \in C$ means document $d_i$ is in the set of document $C$. Similarly, $w \in d_i$ means word $w$ belongs to document $d_i$. The above formula considers the weight of a word based on its suspiciousness, and well-known information retrieval metrics: term frequency (i.e., $\log(f(w,d)+1)$) and inverse document frequency (i.e., $\log\frac{|C|}{|{d_i\in C : w \in d_i }|}$).
+
+After the two vectors of weights of method $m$ and bug report $b$ are computed, we compute the suspiciousness score of the method $m$ by computing the cosine similarity of these two vectors multiplied by a weighting factor. The formula to compute this score is as follows:
+\begin{align}
+&\text{AML}^\text{SuspWord}(b,p,m,C)=\text{SS}_{\text{method}}(m,p)\nonumber \times\\
+&\frac{\sum\limits_{w\in b \cap m} \text{SSTFIDF}(w,p,b,C)\times \text{SSTFIDF}(w,p,m,C)}{\sqrt{\sum\limits_{w \in b} \text{SSTFIDF}(w,p,b,C)^2} \times \sqrt{\sum\limits_{w \in m} \text{SSTFIDF}(w,p,m,C)^2}}
+\label{eq:sum_vsm_susp}
+\end{align}
+Here we use $\text{SS}_\text{method}(m,p)$ that computes the suspiciousness score of method $m$ considering program spectra $p$ as the weighting factor. This can be computed by various spectrum-based bug localization tools. By default, we use the same fault localization tool as the one used in NetML$^\text{Spectra}$ component. With this, NetML$^\text{SuspWord}$ integrates both macro view of method suspiciousness (which considers direct execution of a method in the failing and correct execution traces) and micro view of method suspiciousness (which considers the executions of its constituent words in the execution traces).
+
+
+
+
+
+

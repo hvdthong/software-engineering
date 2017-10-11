@@ -1,0 +1,293 @@
+\section{Experiments }
+\label{sec.exp}
+
+In this section, we first describe the datasets and evaluation settings used in our experiments. We then present a list of research questions we want to address, and accordingly elaborate our experiment results. Finally, we discuss some potential threats to the validity of our approach.
+
+% We then describe our evaluation metrics and experimental settings in Section~\ref{sec:metrics}. Next, we present the research questions in Section~\ref{sec:rqs}. The results of our experiments which answer the research questions are described in Sections~\ref{sec:rq1},~\ref{sec:rq2}~\&~\ref{sec:rq3}. Threats to validity are listed in Section~\ref{sec:threats}
+
+\subsection{Dataset}\label{sec:dataset}
+
+%To evaluate our approach, we use a dataset of 157 bugs from four popular software projects. The four projects are AspectJ~\cite{aspectj_link}, Ant~\cite{ant_link}, Lucene~\cite{lucene_link}, and Rhino~\cite{rhino_link}. All four projects are medium-large scale and implemented in Java. AspectJ, Ant, and Lucene contain more than 300 kLOC, while Rhino contains almost 100 kLOC. {\iffalse \color{red} (Duy: AspectJ uses BugZilla )These four projects use Jira as the issue tracking system, from which we retrieve their bug reports. Bissyande et al. found that in Jira bugs are generally well linked to commits that fix them~\cite{BissyandeTWLJR13}.\fi} Table~\ref{tab:dataset} describes detailed information of the four projects in our study.
+
+To evaluate our approach, we use a dataset of 355 bugs from seven popular software projects. The seven projects are Ant~\cite{ant_link}, AspectJ~\cite{aspectj_link}, Lang~\cite{lang_link}, Lucene~\cite{lucene_link}, Math~\cite{math_link}, Rhino~\cite{rhino_link}, and Time~\cite{time_link}. All seven projects are medium-large scale and implemented in Java. Ant, AspectJ, and Lucene contain more than 300 kLOC. Math, Rhino, and Time contains almost 100 kLOC, while Lang only contains more than 50 KLOC. Ant, AspectJ, Lang, Lucene, Math, and Rhino projects use Jira as the issue tracking system, from which we retrieve their bug reports. Bissyande et al. found that in Jira bugs are generally well linked to commits that fix them~\cite{BissyandeTWLJR13}. Time uses Github as the issues tracking system, from which we collect their bug reports. Table~\ref{tab:dataset} describes detailed information of the seven projects in our study.
+
+%
+%\begin{table*}[t]
+%	\center
+%	\caption{Dataset Description}
+%    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+%    \hline	
+%     \multirow{2}{*}{\textbf{Project}}& \textbf{Number of}  &\multirow{2}{*}{\textbf{Study Perid}} & \multicolumn{3}{c|}{\textbf{Number of Methods}} & \multicolumn{3}{c|}{\textbf{Number of Failed Testcases}}  & \multicolumn{3}{c|}{\textbf{Number of Passed Testcases}}\\\cline{4-12}
+%         ~ & \textbf{Bug Reports} & ~ & \textbf{Max} & \textbf{Median} & \textbf{Min} &\textbf{Max} & \textbf{Median} & \textbf{Min} & \textbf{Max} & \textbf{Median} & \textbf{Min} \\
+%     \hline\hline
+%    AspectJ & 41 & Mar. 2005 - Feb. 2007 & 28,083 & 13,908 & 10,683 & 9 & 1 & 1 & 818 & 803 & 52 \\\hline
+%    Ant & 53 &  Dec. 2001 - Sept. 2013&10,451 &  9,655 & 8,345 &  8 & 1 & 1 & 1,554 & 1,237 & 575 \\\hline
+%    Lucene & 37 & June 2006 - Jan. 2011 & 15,487 & 9,416 & 9,103 & 15 & 1 & 1 & 1,160 & 1,090 & 655 \\\hline
+%	Rhino & 26 & Dec. 2007 - Dec. 2011 & 5,312 & 4,849 & 3,754 & 7 & 1 & 1 & 185~ & 104.5 & 111 \\\hline
+%
+%    \end{tabular}
+%    \label{tab:dataset}
+%\end{table*}
+
+\begin{table}[t]
+	\centering
+	\caption{Dataset Description}
+	%\scalebox{0.92}{
+    \begin{tabular}{|l|c|c|r|}
+    \hline
+   \multirow{2}{*}{\textbf{Project}} &\multirow{2}{*}{\textbf{\#Bugs}}&{\multirow{2}{*}{\textbf{Time Period}}}& \textbf{Average}   \\
+    ~       &             &                                   &\textbf{\# Methods}   \\ \hline
+	\hline
+	Ant       & 53                                          & 12/2001 -- 09/2013 & 9,624.66   \\ 
+    AspectJ       & 41                                              & 03/2005 -- 02/2007                                   & 14,218.39   \\ 
+%    \hline
+     
+%     \hline
+Lang       &     65                                          & 	10/2002 -- 	04/2016 & 2,151.1  \\
+    Lucene       & 37                                              & 06/2006 -- 01/2011                   & 10,220.14   \\
+    Math       & 106                                              &  12/2004 --  03/2016& 4,792.3   \\ 
+%    \hline
+    Rhino       & 26                                                 &  12/2007 -- 12/2011                                   & 4,839.58   \\
+    Time       & 27                                                 &                      05/2004 -- 03/2017            & 4,083.5
+    \\ \hline
+    \end{tabular}
+    %}
+    \label{tab:dataset}
+\end{table}
+
+%The 41 AspectJ bugs are from the iBugs dataset which was collected by Dallmeier and Zimmermann~\cite{DallmeierZ07}. Each bug in the iBugs dataset comes with the code before the fix (pre-fix version), the code after the fix (post-fix version), and a set of test cases. The iBugs dataset contains more than 41 AspectJ bugs, but not all of them come with failing test cases. Test cases provided in the iBugs dataset are obtained from the various versions of the regression test suite that comes with AspectJ. The remaining 116 bugs from Ant, Lucene, and Rhino were collected by ourselves, following the procedure used by Dallmeier and Zimmermann~\cite{DallmeierZ07}. For each bug, we collected the pre-fix version, post-fix version, a set of successful test cases, and at least one failing test case. A failing test case is often included as an attachment to a bug report or committed along with the fix in the post-fix version. When a developer receives a bug report, he/she first needs to replicate the error described in the report~\cite{worksforme}. In this process, he is creating a failing test case. Unfortunately, not all test cases are documented and saved in the version control systems.
+
+The 116 bugs from Ant, Lucene, and Rhino were collected by ourselves, following the procedure used by Dallmeier and Zimmermann~\cite{DallmeierZ07}. For each bug, we collected the pre-fix version, post-fix version, a set of successful test cases, and at least one failing test case. A failing test case is often included as an attachment to a bug report or committed along with the fix in the post-fix version. When a developer receives a bug report, he/she first needs to replicate the error described in the report~\cite{worksforme}. In this process, he is creating a failing test case. Unfortunately, not all test cases are documented and saved in the version control systems. The 41 AspectJ bugs are from the iBugs dataset which was collected by Dallmeier and Zimmermann~\cite{DallmeierZ07}. Each bug in the iBugs dataset comes with the code before the fix (pre-fix version), the code after the fix (post-fix version), and a set of test cases. The iBugs dataset contains more than 41 AspectJ bugs, but not all of them come with failing test cases. Test cases provided in the iBugs dataset are obtained from the various versions of the regression test suite that comes with AspectJ. We collected the remaining 198 bugs from Lang, Math, and Time from Defects4J benchmark~\cite{Just:2014:DDE:2610384.2628055}, a database of real, isolated, reproducible software faults from real-world open-source Java projects. The three projects include a large number of test cases, and there exists at least one failing test case per bug. 
+%We note that Math originally has 106 bugs. However, there are three bugs that we are unable to find their bug reports, and hence we omit these three bugs. For this reason, Math only contains 103 bugs. 
+
+
+%By doing this, the developer is actually creating a system test case that fails in the pre-fix version but will pass in the post-fix version.
+
+%\begin{table}[t]
+%	\centering
+%	\caption{Statistics of Collected Traces}
+%    \begin{tabular}{|l||r|r|r||r|r|r|}
+%    \hline
+%    \multirow{2}{*}{\text{Project}} & \multicolumn{3}{c||}{\text{Failed Traces}}  & %\multicolumn{3}{c|}{\text{Passed Traces}}   \\ \cline{2-7}
+%    ~ & Min & Median & Max & Min & Median & Max  \\ \hline
+%	\hline
+%Ant&1&2.0&8&575&1212.0&1554\\\hline
+%AspectJ&1&1.0&9&52&802.0&818\\\hline
+%Lucene&1&1.0&15&655&1076.0&1160\\\hline
+%Rhino&1&1.0&7&11&101.5&185\\\hline
+
+
+%    \end{tabular}
+%    \label{tab:traces_statistics}
+%\end{table}
+%Since multi-modal bug localization techniques require both textual information in bug reports and program spectra, we select bug reports whose failing test cases are available.
+
+%{\color{red} These three projects use Jira as the issue tracking system, from which we retrieve their bug reports. Bissyande et al. found that in Jira bugs are generally well linked to commits that fix them~\cite{BissyandeTWLJR13}.}
+%{\iffalse We analyzed all bug reports of Ant from version 1.5.1 to 1.9.2, Lucene from version 2.0 to 3.1, and Rhino from version 1.6 to 1.7 and find those whose failing test cases are available.\fi}
+%{\color{red} Table~\ref{tab:dataset} describes study periods of the three projects.}
+
+%The Among 157 bugs, we use 41 bugs of AspectJ from iBugs dataset\footnote{http://www.st.cs.uni-saarland.de/ibugs/}. For the remaining 116 bugs, we manually collect Ant, Lucene, and Rhino's repositories.
+%From the four projects, we have 157 bugs that we are able to find at least one test case that is failed in the before-fix version, and passed in the after-fix version.
+
+%AspectJ, Ant, Lucene, Rhino
+%AspectJ: ibugs
+%why choose these projects ? popular, well documented as fixes are labelled with bug id
+%Ant, Lucene, Rhino: manually extract from the repository
+%All projects are in Java
+%Bug report extract from bug tracking system
+%Test cases: failed test case that failed in prefix, and passed in postfix
+
+
+%We manually finds bugs of Ant, Lucene, and Rhino which have test cases to reproduce the bugs in the faulty programs. Such these test cases are usually attached with bug reports by users, or created by developers during bug-fixing process. From the change history of the projects, we identify the links from bugs to commits as developers usually put bug IDs with commits that have the bug fixes. We select program versions in the the commits right before the linked commits that have the bug fixes as the faulty program versions. Furthermore, we select the bugs whose bug fixes come with test cases. Usually a Junit test case file has name starts or ends ``Test''. Using this heuristic, we select these such bugs, and run the found test cases with before-fix version, and after-fix version of the bug. If the before-fix version returns an unexpected result, and the after-fix version outputs an expected result. We include the bug into our dataset.
+
+%Tablet~\ref{tab:dataset} depicts information of the dataset.
+%how to find link from bug to commit
+%how to find test case
+%after identify the links, and failed test case -> collect data
+%for bug: textual bug report ( long description + short description ) + test cases ( failed + passed tests) + source code of prefix + groundtruth methods.
+
+%files in our dataset. Therefore, the amount of effort to inspect  top-10 program methods is equivalent to the amount of effort to examine one single source code file.
+
+\subsection{Evaluation Metrics and Settings}
+\label{sec:metrics}
+
+To assess the effectiveness of a bug localization method, we employ two key metrics, namely: Top N and mean average precision (MAP). They are respectively described below:
+
+\begin{itemize}
+	\item  \textbf{Top N}: Given a bug report, if one of its corresponding faulty methods is in the top-N results, we consider that the bug is successfully localized. The Top N score of a bug localization method is the number of bugs it can successfully localize~\cite{Zhou:2012:BFM:2337223.2337226,SahaLKP13}.
+	\item  \textbf{Mean Average Precision (MAP)}: MAP is an IR metric to evaluate ranking approaches~\cite{Manning2008}, and is computed by taking the mean of the {\em average precision} scores across all bug reports. The average precision of a single bug report is computed as:
+	\[
+	AP = \frac{\sum_{k=1}^{M}P(k) \times pos(k)}{\sum_{k=1}^{M} pos(k)}
+	\]
+	where $k$ is a rank in the returned ranked methods, $M$ is the number of ranked methods, and $pos(k)$ indicates whether the $k^{th}$ method is faulty or not. Here $P(k)$ is the precision at a given top $k$ methods, which is computed as follows:
+	\[
+	P(k)=\frac{\#faulty\ methods\ in\ the\ top\ k}{k}.
+	\]
+Note that the MAP scores of existing bug localization methods are typically low~\cite{Rao:2011:RSL:1985441.1985451,Sisman:2012:IVH:2664446.2664454,Zhou:2012:BFM:2337223.2337226,SahaLKP13}.
+\end{itemize}
+
+
+%\begin{table}
+%	\caption{Experimental Configuration of Algorithm~\ref{alg:adaptive}. $\eta$ = Learning Rate. $\lambda$= Regularization. $T_{max}$ = Maximum of number iteration.}
+%	\centering
+%    \begin{tabular}{|l|c|c|c|}
+%    \hline
+%    \textbf{Project} &  $\eta$ &  $\lambda$& $T_{max}$ \\ \hline
+%    \hline
+%    AspectJ & $10^{-2}$             & $10^{-5}$              & 30     \\ \hline
+%    Ant     & $10^{-2}$              & $10^{-5}$               & 30     \\ \hline
+%    Lucene  & $10^{-2}$              & $10^{-5}$               &30    \\ \hline
+%    Rhino   & $10^{-3}$              &$10^{-3}$               & 30     \\ \hline
+%    \end{tabular}
+%    \label{tab:configeration}
+%\end{table}
+
+%\vspace{0.1cm} {We perform standard 10 fold cross validation (CV) to evaluate our approach. For each project, we divide the bugs into ten sets. We use 9 sets as training data and 1 as testing data. We repeat the process 10 times using different training and testing data combinations. We then aggregate the results to get the final Top N and MAP scores. For our experiments, the learning rate $\eta$ and regularization parameter $\lambda$ of AML are chosen by performing another cross validation on the training data, while the maximum number of iterations $T_{max}$ is fixed as $30$. We also use $K=10$ as default value for the number of nearest neighbors. We conduct experiments on an Intel(R) Xeon E5-2667 2.9GHz server running Linux 2.6.
+
+Our evaluation procedure is based on 10-fold \emph{cross validation} (CV). That is, for each project, we divide the bug reports into ten (mutually exclusive) sets. Then, for each fold, we take 1 set as new bug report queries (i.e., testing set) and treat the remaining 9 sets as historical bug reports (i.e., training set). We repeat this 10 times, and then collate the results to get the aggregated Top N and MAP scores.
+	
+In all our experiments, the hyper-parameters of the NetML method were configured as follows. Firstly, the regularization parameters $\alpha$ and $\beta$ were chosen by performing 10 fold cross validation on the training set. Next, the maximum number of iterations $T_{max}$ was fixed to $30$. We use $K=10$ as default value for the number of nearest neighbors. Note that the NetML parameters $K$ and $T_{max}$ follow the settings used in AML~\cite{Le:2015:IRS:2786805.2786880}, so as to ensure fair comparisons. All experiments were conducted on an Intel(R) Xeon 2.9GHz server running a Linux operating system.
+
+In order to assess whether NetML substantially outperforms other bug localization methods, we apply \emph{Wilcoxon signed-rank test}~\cite{Wilcoxon1945}; it is a non-parametric statistical significance test for comparing two related or matched samples, whereby the population cannot be assumed to be normally distributed. The Wilcoxon test was applied to two types of metric (i.e., TopN and MAP). For every evaluation metric, we collated the 10-fold results of a bug localization technique across the four software projects (i.e., AspectJ, Ant, Lucene, and Rhino) and then performed the Wilcoxon test to compare the collated results of different techniques. For this test, our null hypothesis is that NetML performs \emph{worse} than or \emph{equal} to the other method, and so we used one-sided/tail $p$-value to validate this hypothesis. Moreover, we also apply the Benjamini-Hochberg (BH)~\cite{Benjamini1995thecontrol} procedure to control the effect of multiple comparisons. If the $p$-value is sufficiently small (say, below a significance level of $0.05$), we can confidently reject the null hypothesis and conclude that NetML is significantly better than the other method.
+
+\subsection{Research Questions}
+\label{sec:rqs}
+
+Our empirical study seeks to answer several research questions (RQ), as described in the following subsections.
+
+\subsubsection{RQ1: How Effective is NetML Compared to Other State-of-the-Art Techniques?}
+
+%We compare our NetML approach with its predecessor, i.e., AML~\cite{Le:2015:IRS:2786805.2786880}, and several other state-of-the-art techniques. Previously, PROMESIR~\cite{PoshyvanykGMAR07}, SITIR~\cite{LiuMPR07}, and several variants developed by Dit et al.~\cite{DitRP13} were state-of-the-art multi-modal feature location techniques. Among the variants proposed by Dit et al.~\cite{DitRP13}, the best performing ones were $IR_{LSI}Dyn_{bin}WM_{HITS}(h,bin)^{bottom}$ and  $IR_{LSI}Dyn_{bin}WM_{HITS}(h,freq)^{bottom}$. In this paper, we refer to these variants as DIT$^\text{A}$ and DIT$^\text{B}$ respectively. Dit et al. had shown that these two variants outperform SITIR, and so we exclude SITIR from our study. We also compare NetML with a state-of-the-art IR-based bug localization method named LR~\cite{YeBL14}, and a state-of-the-art spectrum-based bug localization method named MULTRIC~\cite{XuanM14}. Note that, unlike PROMESIR, DIT$^{A}$, DIT$^{B}$, and MULTRIC which locate buggy methods, LR locates buggy files. Thus, we convert the list of files that LR produces into a list of methods by using two heuristics: (1) to return methods in a file in the same order that they appear in the file; and (2) to return methods based on their similarity to the input bug report as computed using a VSM model. We refer to the two variants of LR as LR$^{A}$ and LR$^{B}$ respectively.
+
+We compare out NetML approach with its predecessor, i.e., AML~\cite{Le:2015:IRS:2786805.2786880}, and several other state-of-the-art techniques. Previously, Le et al. proposed SAVANT~\cite{B.Le:2016:LBF:2931037.2931049}, a state-of-the-art fault localization approach that employs a learning-to-rank~\cite{svmrank} strategy, using likely invariant \textit{diffs} and suspiciousness scores as features. OCHIAI~\cite{Abreu:2007:ASF:1308173.1308264} and DSTAR~\cite{DBLP:journals/tr/WongDGL14} are the well-known statistical formula to detect suspicious locations for fault localization without requiring any prior information on program structure or semantics. PROMESIR~\cite{PoshyvanykGMAR07}, SITIR~\cite{LiuMPR07}, and several variants developed by Dit et al.~\cite{DitRP13} were state-of-the-art multi-modal feature location techniques. Among the variants proposed by Dit et al.~\cite{DitRP13}, the best performing ones were $IR_{LSI}Dyn_{bin}WM_{HITS}(h,bin)^{bottom}$ and  $IR_{LSI}Dyn_{bin}WM_{HITS}(h,freq)^{bottom}$. In this paper, we refer to these variants as DIT$^\text{A}$ and DIT$^\text{B}$ respectively. Dit et al. had shown that these two variants outperform SITIR, and so we exclude SITIR from our study. We also compare NetML with a state-of-the-art IR-based bug localization method named LR~\cite{YeBL14}, and a state-of-the-art spectrum-based bug localization method named MULTRIC~\cite{XuanM14}. Note that, unlike PROMESIR, DIT$^{A}$, DIT$^{B}$, and MULTRIC which locate buggy methods, LR locates buggy files. Thus, we convert the list of files that LR produces into a list of methods by using two heuristics: (1) to return methods in a file in the same order that they appear in the file; and (2) to return methods based on their similarity to the input bug report as computed using a VSM model. We refer to the two variants of LR as LR$^{A}$ and LR$^{B}$ respectively.
+
+%measure the suspiciousness of program units based on the execution traces in spectrum-based fault localization. 
+
+For all the above-mentioned techniques, we used the same parameters and settings as described in the respective papers, with the following exceptions that we justify. For DIT$^\text{A}$ and DIT$^\text{B}$, the threshold used to filter methods using HITS was decided ``such that at least one gold set method remained in the results for 66\% of the [bugs]''~\cite{DitRP13}. In this paper, since we used 10-fold CV, rather than using 66\% of all bugs, we used all bugs in the training data (i.e., 90\% of all bugs) to tune the threshold. For PROMESIR, we also used 10-fold CV and applied a brute force approach to tune PROMESIR's component weights using a step of 0.05.
+
+%We first compare NetML against our original multi-modal technique (i.e., AML)~\cite{Le:2015:IRS:2786805.2786880}. AML tries to estimate the method suspiciousness score by computing separate latent parameters for each bug report, and hence allows us to localize bugs more effectively. In this paper, bug localization is considered as ranking of query results problem in information retrieval. In particular, we look at the description of the bug report as a query, and methods as documents. Hence, NetML and AML are employed to sort the methods based on their relevance with the bug reports.  
+
+%In the past, PROMESIR~\cite{PoshyvanykGMAR07}, SITIR~\cite{LiuMPR07}, and several algorithm variants proposed by Dit et al.~\cite{DitRP13} were state-of-the-art multi-modal feature location techniques. Among the variants proposed by Dit et al.~\cite{DitRP13}, the best performing ones were $IR_{LSI}Dyn_{bin}WM_{HITS}(h,bin)^{bottom}$ and  $IR_{LSI}Dyn_{bin}WM_{HITS}(h,freq)^{bottom}$. We refer to them as DIT$^\text{A}$ and DIT$^\text{B}$ in this paper. Dit et al. have shown that these two variants outperform SITIR. 
+%However, Dit et al.'s variants have never been compared with PROMESIR. PROMESIR has also never been compared with SITIR. Thus, to answer this research question, we compare the performance of our approach with PROMESIR, DIT$^\text{A}$ and DIT$^\text{B}$.  
+%Additionally, the two variants of LR~\cite{YeBL14} (LR$^A$ and LR$^B$) and MULTRIC~\cite{XuanM14} which are recently proposed state-of-the-art IR-based and spectrum-based bug localization techniques respectively. In this paper, we compare NetML against these state-of-the-art techniques, including AML, to evaluate the effectiveness of our proposed approach (i.e., NetML) in bug localization.
+
+\subsubsection{RQ2: Do Feature Components of NetML Contribute toward Its Overall Performance?}
+
+%How effective is AML as compared to different combinations of its components (i.e., $\text{AML}^\text{Text}$, $\text{AML}^\text{Spectra}$, and $\text{AML}^\text{SuspWord}$)
+
+To answer this question, we conducted an ablation test by dropping one feature component (i.e., $\text{NetML}^\text{Text}$, $\text{NetML}^\text{SuspWord}$, or $\text{NetML}^\text{Spectra}$) one-at-a-time and evaluating the performance. In the process, we created three variants of NetML: $\text{All}^{-\text{Text}}$, $\text{All}^{-\text{SuspWord}}$ , and  $\text{All}^{-\text{Spectra}}$. That is, we excluded Text, SuspWord, and Spectra from all feature components, respectively (see also Fig. \ref{fig:framework}). We used the default value of $K=10$, and applied the NetML adaptive learning procedure (i.e., Algorithm \ref{alg:network_lasso}) to tune the latent parameters of these variants. As our baseline, we performed the same ablation test to the feature components of the AML method (i.e., $\text{AML}^\text{Text}$, $\text{AML}^\text{SuspWord}$, or $\text{AML}^\text{Spectra}$).
+
+%To answer this research question, we simply drop one component (i.e., $\text{AML}^\text{Text}$, $\text{AML}^\text{SuspWord}$, and  $\text{AML}^\text{Spectra}$) from AML one-at-a-time and evaluate their performance. In the process, we create three variants of AML: $\text{AML}^{-\text{Text}}$, $\text{AML}^{-\text{SuspWord}}$ , and  $\text{AML}^{-\text{Spectra}}$. To create $\text{AML}^{-\text{Text}}$, $\text{AML}^{-\text{SuspWord}}$ , and  $\text{AML}^{-\text{Spectra}}$, we exclude $\text{AML}^{\text{Text}}$, $\text{AML}^{\text{SuspWord}}$ , and  $\text{AML}^{\text{Spectra}}$ components from Equation~\ref{eqn:composite} of our proposed AML, respectively. We use the default value of $K=10$, and apply Algorithm~\ref{alg:adaptive} to tune weights of these variants, and compare their performance with our proposed AML.
+
+%question investigate the performance of different combinations of three AML components . In total, we compare 6 variants of AML with our proposed AML (Section~\ref{subsec:adaptive}). These variants are $\text{AML}^\text{Text}$, $\text{AML}^\text{SuspWord}$,  $\text{AML}^\text{Spectra}$, .
+
+%By excluding one component from Equation~\ref{eqn:composite}, we formulate three different variants of AML. They are $\text{AML}^{-\text{Text}}$, $\text{AML}^{-\text{SuspWord}}$, and $\text{AML}^{-\text{Spectra}}$. In $\text{AML}^{-\text{Text}}$, we exclude $\text{AML}^\text{Text}$ component from Equation~\ref{eqn:composite}. Similarly, we remove $\text{AML}^\text{SuspWord}$, and  $\text{AML}^\text{Spectra}$ from Equation~\ref{eqn:composite} to create $\text{AML}^{-\text{SuspWord}}$, and  $\text{AML}^{-\text{Spectra}}$, respectively. We also investigate performance of each component when they are isolated.
+
+%To answer this question, we use the default value of $n=10$, and apply Algorithm~\ref{alg:adaptive} to tune weights of the three variants for bug localization. Then, we compare the performance  of the three variants with the original AML in term of Mean Average Precision.
+
+\subsubsection{RQ3: How Effective is the NetML Integrator?}
+
+Instead of using the NetML integrator component (see Section \ref{sec.generalized_adaptive}), one may consider using a standard machine learning algorithm, such as the learning-to-rank method, to combine the scores produced by the three feature components. Indeed, state-of-the-art IR-based and spectrum-based bug localization techniques such as LR and MULTRIC are based on the learning-to-rank method. As such, we conduct an experiment to compare our NetML integrator model with an off-the-shelf learning-to-rank model called SVM$^{rank}$~\cite{svmrank}, which was also used by LR~\cite{YeBL14}. To do so, we simply replace the NetML integrator model in Fig. \ref{fig:framework} with SVM$^{rank}$, and then compare the resulting performances. For completeness, we also compare our NetML integrator with the integrator model used by the AML algorithm.
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+
+
+%\noindent
+%\textbf{Research Question 4:} How efficient is AML?
+%
+% If AML takes hours to produce a ranked list of methods for a given bug report, then it would be less useful. In this research question, we investigate the average running time needed for AML to output a ranked list of methods for a given bug report.
+
+
+
+\subsubsection{RQ4: What is the Effect of Varying the Number of Neighbors $K$ on the Performance of NetML?}
+
+The most important parameter in our NetML approach is the number of nearest neighbors $K$ (while the regularization parameters $\alpha$ and $\beta$ were chosen via cross-validation---see Section \ref{sec:metrics}). By default, we set the number of neighbors to $K=10$, but the effect of varying this value is unclear. To answer this research question, we vary the value of $K$ and investigate its effects on the performance of NetML. In particular, we wish to investigate if the performance remains relatively stable with varying values of $K$. For each $K$ value, we also compare the performance of NetML against its predecessor (i.e., AML) using the same value.
+
+%\vspace{0.2cm}\noindent
+%\textbf{Research Question 5:} Which of the three components of AML contributes the most to the effectiveness of AML?
+
+%\vspace{0.2cm} AML has three components AML$^\text{Text}$, AML$^{\text{Spectra}}$, and AML$^{SuspWord}$ that assign scores to methods. For each individual bug, the adaptive integrator component of AML learns weights that govern the contribution of these three components. It is unclear which of the three components contributes the most for most bugs. {\color{red}To answer this research question, we estimate the average values of weights assigned to each AML component and highlight which of the three components contribute the most to the effectiveness of AML}.
+
+%\noindent
+%\textbf{Research Question 4:} Is the adaptiveness of our approach needed to improve performance?
+%
+%\vspace{0.2cm} $AML$ put forwards two contribution an adaptive bug localization technique that re-tunes itself for every new bug, and the computation of word suspiciousness. It is unclear whether adaptive bug localization is really needed or whether it can improve performance. To answer this research question, we create a non-adaptive version of $AML$ which learns weight using {\em all} training data, referred to as $AML_{*}$ and we compare the performance of $AML$ with $AML_{*}$.
+
+\subsubsection{RQ5: How Effective is NetML in Cross-project Detect Prediction?}
+It is often difficult to build an accurate prediction model for a new project due to the small size of defect data. To solve this problem, cross-project defect prediction approach constructs a prediction model by using source projects or called a training data. The predicted model is used to predict defects for target projects or called a testing data. However, the features extracted from source projects and target projects often have different distributions, leading an inaccurate prediction model. For this reason, the cross-project defect prediction problem is still a primary research question~\cite{Nam:2015:HDP:2786805.2786814}. 
+
+We compare our NetML cross-project defect prediction technique with NetML within-project defect prediction. We first use source projects as training data to build a prediction model, and then we employ the model to predict defects for target projects. In this experiments, we configured the hyper-parameters of NetML cross-project as followed Section~\ref{sec:metrics}. We also apply \textit{Wilcoxon signed-rank test} proposed by the Benjamini-Hochberg (BH) to assess whether NetML cross-project and within-project are substantially significant. 
+
+We compare our NetML cross-project defect prediction technique with NetML within-project defect prediction. We first use source projects as training data to build a prediction model, and then we employ the model to predict defects for target projects. In within-project defect prediction, we use a target project as training and testing data, and evaluate the within-project defect prediction based on 10 folds \textit{cross validation}. We configured the hyper-parameters of NetML cross-project as followed Section~\ref{sec:metrics}. We also perform \textit{Wilcoxon signed-rank test} to assess whether NetML cross-project and within-project are substantially significant. 
+%compare the collated results, and then apply by the Benjamini-Hochberg (BH) on its \textit{p}-value to assess whether NetML cross-project and within-project are substantially significant. 
+
+\subsection{Results}
+This section presents our experiment results and discussion in relation to the research questions raised in Section \ref{sec:rqs}.
+
+\subsubsection{RQ1: Comparisons of NetML with Other Techniques}
+\label{sec:rq_benchmark}
+\input{rq1}
+
+%\subsubsection{RQ2: Significant results of AML* and AML}
+%\input{rq_statssig}
+
+\subsubsection{RQ2: Contribution of Feature Components}
+\label{sec:rq_feature}
+\input{rq_exclude_component}
+
+\subsubsection{RQ3: Comparisons among Integrator Models}
+\label{sec:rq_integrator}
+\input{integrator}
+
+%\subsubsection{RQ4: Running Time}
+%\input{time_analysis}
+
+\subsubsection{RQ4: Effect of Varying Number of Neighbors}
+\label{sec:rq2_neighbor}
+\input{rq2}
+
+\subsubsection{RQ5: How Effective is NetML in Cross-project Detect Prediction?}
+\label{sec:rq5_cross-proj}
+\input{rq5_cross_proj}
+
+%\subsubsection{RQ6: How does NetML work in Fault Localization?}
+%\label{sec:rq6_quantative_analysis}
+%\input{rq6_analysis}
+
+%\subsubsection{RQ5: Component Weights}\label{sec:rq3}
+%\input{rq3}
+
+%\subsection{RQ4: Adaptive vs. Non-Adaptive}\label{sec:rq4}
+%\input{rq4}
+
+
+
+\section{Discussion}
+\label{sec:threats}
+
+In this section, we discuss how NetML works in fault localization problem. We briefly show some examples and explain a case when NetML achieves good/poor performance. Moreover, there are several threats that may potentially impact the validity of our study. We also discuss these threats below.
+
+\input{qualitative_analysis}
+
+
+
+
+\subsection{Number of Failed Test Cases and Its Impact}
+
+In our experiments with 157 bugs, most of the bugs were found to come with few failed test cases (average = 2.185). We have investigated if the number of failed test cases impacts the effectiveness of our approach. To this end, we computed the differences between the average number of failed test cases for bugs that are successfully localized at top-N positions (N = 1,5,10) and bugs that are not successfully localized. We found that the differences are small (-0.472 to 0.074 test cases). These indicate that the number of test cases does not impact the effectiveness of our approach significantly and typically 1 to 3 failed test cases are sufficient for our approach to be effective.
+
+\subsection{Threats to Internal Validity} 
+
+Threats to internal validity relate to implementation and dataset errors. We have checked our implementations and datasets. However, there could still be errors that we do not notice. Threats to external validity relate to the generalizability of our findings. In this work, we have analyzed 157 real bugs from 4 medium-large software systems. In the future, we plan to reduce the threats to external validity by investigating more real bugs from additional software systems, written in various programming languages. 
+
+%\subsubsection{Threats to Construct Validity}
+%
+%Threats to construct validity relate to the suitability of our evaluation metrics and experimental settings. Both Top N and MAP have been used to evaluate many past bug localization studies~\cite{Rao:2011:RSL:1985441.1985451,Sisman:2012:IVH:2664446.2664454,Zhou:2012:BFM:2337223.2337226,SahaLKP13}. MAP is also well known in the information retrieval community~\cite{Manning2008}. We have performed cross validation to evaluate the effectiveness of approach on various training and test data. Cross validation is a standard setting used to evaluate many past studies~\cite{Anvik:2006:FTB:1134285.1134336,HooimeijerW07,DAmbrosLR10,ShivajiWAK13}. Unfortunately, cross validation ignores temporal ordering among bug reports. If bugs reported at different dates do not exhibit substantially different characteristics in terms of their program spectra and descriptions, then this threat is minimal.
+
+%The creation of our datasets follow the heuristics described by Dallmeier and Zimmermann~\cite{DallmeierZ07}. These heuristics are not guaranteed to be perfect; for example, there could be some bug fixing commits that are not linked to their corresponding bug report. Still, all these systems are written in Java and open source. We also plan to investigate the effectiveness of our bug localization technique on closed-source or industrial software systems.
+ 
+%Thus, we believe there is little threat to construct validity from evaluation metrics.
+
+%Thus, we believe it is reasonable to ignore temporal ordering. In the future, we plan to evaluate our approach in different settings that captures date information of bug reports. \color{red}In addition to textual descriptions, bug reports contain date information (i.e., report dates) in their contents. These information can be used to construct a temporal order between bug reports. However, until now, it is unclear whether ordering of bug reports have impacts on root causes of bugs. For example, \textit{Null Pointer Exception} can happen anytime regardless the occurrences of  other bugs.}

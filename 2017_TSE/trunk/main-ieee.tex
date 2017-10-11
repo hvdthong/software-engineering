@@ -1,0 +1,177 @@
+\documentclass[10pt,journal,compsoc]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage[pdftex]{graphicx}
+\usepackage{color}
+
+\usepackage{amssymb,amsmath}
+\usepackage{proof,latexsym}
+\usepackage{color}
+\usepackage{enumerate}
+
+\usepackage{ifthen}
+\usepackage{amssymb}
+
+\usepackage{float}
+%\usepackage{subfigure}
+\usepackage{alltt}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{epstopdf}
+\usepackage{hyperref}
+%\usepackage{algorithm2e}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{balance}
+\usepackage{tabularx}
+\usepackage{array}
+
+
+
+\newcommand{\dl}[1]{\textcolor{red}{{\it [DL says: #1]}}}
+\usepackage{amssymb,amsmath}
+\usepackage{proof,latexsym}
+\usepackage{color}
+\usepackage{enumerate}
+
+\usepackage{ifthen}
+\usepackage{amssymb}
+
+\usepackage{float}
+%\usepackage{subfigure}
+\usepackage{alltt}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{epstopdf}
+\usepackage{hyperref}
+%\usepackage{algorithm2e}
+\usepackage{url}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+%\usepackage{algorithmic}
+\usepackage{epstopdf}
+\usepackage{balance}
+\usepackage{multirow}
+\usepackage{algpseudocode}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{subcaption}
+%\usepackage{arydshln}
+
+\usepackage{xcolor}
+\newcommand\recheck[1]{\textcolor{red}{#1}}
+
+\algrenewcommand\algorithmicrequire{\textbf{Inputs:}}
+\algrenewcommand\algorithmicensure{\textbf{Outputs:}}
+
+
+\newcommand{\CodeIn}[1]{{\small\texttt{#1}}}
+\newcommand{\CodeOutSize}{\scriptsize}
+\newenvironment{CodeOut}{\begin{scriptsize}}{\end{scriptsize}}
+\newtheorem{defn}{Definition}
+\newtheorem{prop}{Property}
+
+
+\newboolean{showcomments}
+\setboolean{showcomments}{true}
+\ifthenelse{\boolean{showcomments}}
+{ \newcommand{\mynote}[2]{
+    \fbox{\bfseries\sffamily\scriptsize#1}
+    {\small$\blacktriangleright$\textsf{\emph{#2}}$\blacktriangleleft$}}}
+{ \newcommand{\mynote}[2]{}}
+
+
+\def\cnf{\mathit{conf}}
+
+\newenvironment{packed_enum}{
+\begin{enumerate}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{enumerate}}
+
+\newenvironment{packed_itemize}{
+\begin{itemize}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}
+
+\def\concat{\mathit{+\!\!+}}
+
+
+\newcommand{\todosimple}[2]
+  {{\scriptsize \textbf{{#1} says: \color{red} {#2}}}}
+\newcommand{\ssmnote}[1]{\todosimple{SM}{#1}}
+\newcommand{\sdlnote}[1]{\todosimple{DL}{#1}}
+
+
+\newcommand{\task}[1]{\mynote{**Task**}{#1}}
+
+
+\newcommand{\todo}[1]{\vspace{3mm}\begin{center}\fbox{
+        \begin{minipage}{.7\linewidth} \small\begin{center}\fbox{To Do:}
+        \end{center}#1\end{minipage}}\end{center}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+\begin{document}
+\bstctlcite{IEEEexample:BSTcontrol}
+\pdfpagewidth 8.5in
+\pdfpageheight 11.0in
+
+\title{\input{title}}
+
+%\author{\IEEEauthorblockN{TBD}
+%    \IEEEauthorblockA{Singapore Management University, Singapore\\
+%    TBD
+%    }
+%}
+
+\author{\IEEEauthorblockN{Thong Hoang, Richard J. Oentaryo, Tien-Duy B. Le, and David Lo}\\
+\IEEEauthorblockA{School of Information Systems, Singapore Management University\\
+\{vdthoang.2016, roentaryo, btdle.2012, davidlo\}@smu.edu.sg}
+}
+
+\maketitle
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+
+\input{intro}
+\input{prelim}
+\input{approach-2}
+\input{exp}
+\input{related}
+\input{conclusion}
+\input{acknowlegement} 
+
+
+\balance
+
+\let\oldthebibliography=\thebibliography
+\let\endoldthebibliography=\endthebibliography
+\renewenvironment{thebibliography}[1]{%
+  \vspace{0pt}
+  \begin{oldthebibliography}{#1}%
+%    \fontsize{7.0}{7.5}\selectfont
+    \setlength{\parskip}{0ex}%
+    \setlength{\itemsep}{0.5ex}%
+}%
+{%
+  \end{oldthebibliography}%
+}
+{\scriptsize
+\def\baselinestretch{0.95}
+\bibliographystyle{IEEEtranS}
+%\def\IEEEbibitemsep{0.92pt plus .5pt}
+
+\bibliography{main,pbuglocator,faultlocal,IEEEabrv}
+}
+
+\end{document}

@@ -1,0 +1,116 @@
+
+%In this section, we propose the text retrieval model that combines \textit{TF-IDF} weighting with word-based, and method-based suspiciousness scores. The purpose of the combination is to maximize the ranking of relevant documents (i.e., faulty methods). Our approach is built upon the standard text retrieval model\textemdash Vector Space Model (VSM) with the utilization of suspiciousness scores. We denote our approach as $VSM^{susp}$. Similar to standard VSM, $VSM^{susp}$ represents each document as a vector of weights where each weight corresponds to a word. In $VSM^{susp}$, we compute the weight of each word using $SSTFIDF$ statistic (Section \ref{sec:sstfidf}). Following Equation  \ref{eq:sstfidf}, the weight of word $w$ in document $d$ of corpus $C$ is calculated as follows
+%\begin{align*}
+%SSTFIDF(w,d)&=SS_{word}(w)\times \log(f(w,d)+1)\\
+%&\times \log\frac{|C|}{|{d_i\in C : w \in d_i }|}
+%\end{align*}
+%In the above formula, $SS_{word}(w)$ is the suspiciousness score of word $w$ calculated by a generic spectrum-based fault localization formula, $f(w,d)$ is the number of times word $w$ appears in document $d$, and $d_i \in C$ means document $d_i$ is in set of document $C$. Similarly, $w \in d_i$ means word $w$ belongs to document $d_i$.
+%
+%Given a bug report $q$, and document $d$ in method corpus, we compare the two documents by calculating the cosine similarity their document vector $\vec{q}$ and $\vec{d}$. We denote the cosine similarity between bug report $q$, and document $d$ in method corpus $C$ as $cosine(q,d)$. With the use of proposed statistic $SSTFIDF$, the value of $cosine(q,d)$ reflects the textual similarity between suspicious parts of bug report $q$, and document $d$ that contain suspicious words. However, there are still cases that documents with low or zero method-based suspiciousness scores still have high cosine similarity to the bug report. The reason is that documents in these cases are sharing suspicious words with the input bug report. Therefore, we multiply the cosine similarity by the suspiciousness scores of the document(i.e., method) to diminish ranking of irrelevant documents as well as increase ranking of . The following is the formula of the similarity between bug report $q$, and document $d$ in our proposed model:
+%\begin{align}
+%&sim_{VSM}^{susp}(q,d)=SS_{method}(d)\nonumber \\
+%&\times \frac{\sum\limits_{w\in q \cap d} SSTFIDF(w,q)\times SSTFIDF(w,d)}{\sqrt{\sum\limits_{w \in q} SSTFIDF(w,q)^2} \times \sqrt{\sum\limits_{w \in d} SSTFIDF(w,d)^2}}
+%\label{eq:sum_vsm_susp}
+%\end{align}
+%
+%In the above formula, $SS_{method}(d)$ is method-based suspiciousness scores of document $d$ calculated by a spectrum-based fault localization formula, and $SSTFIDF(w,d)$ is the Suspiciousness Score\textendash Term Frequency\textendash Inverse Document Frequency statistic of word $w$ in document $d$ of corpus $C$ (Section \ref{sec:sstfidf}).
+
+The integrator component serves to combine the scores produced by the three components AML$^\text{Text}$, AML$^\text{Spectra}$ and AML$^\text{SuspWord}$ by taking a weighted sum of the scores. The final suspiciousness score of method $m$ given bug report $b$ and program spectra $p$ in a corpus $C$ is given by:
+\begin{align}
+\label{eqn:composite}
+f(x_i, \theta) &= \alpha \times \text{AML}^\text{Text}(b,m) + \beta \times \text{AML}^\text{Spectra}(p,m) \nonumber\\
+&+ \gamma \times \text{AML}^\text{SuspWord}(b,p,m)
+\end{align}
+
+\noindent where $i$ refers to a specific $(b,p,m)$ combination (aka \emph{data instance}), $x_i$ denotes the feature vector $x_i = [ \text{AML}^\text{Text}(b,m), \text{AML}^\text{Spectra}(p,m), \text{AML}^\text{SuspWord}(b,p,m)]$, and $\theta$ is the parameter vector $[ \alpha, \beta, \gamma ]$, where $\alpha, \beta, \gamma$ are arbitrary real numbers. Note that we exclude mentioning corpus $C$ in both sides of Equation~\ref{eqn:composite} to simplify the set of notations used in this section.
+
+The weight parameters ($\theta$) are {\em tuned adaptively} for a new bug report $b$ based on a set of top-K historical fixed bugs in a training data that are the most similar to $b$. We find these top-K nearest neighbors by measuring the textual similarity of $b$ with training (historical) bug reports using the VSM model. In this work, we propose a probabilistic learning approach which analyzes this training data to fine-tune the weight parameters $\alpha$, $\beta$, and $\gamma$ for the new bug report $b$.
+
+\paragraph{Probabilistic Formulation} \hspace{0pt} 
+From a machine learning standpoint, bug localization can be interpreted as a \emph{binary classification} task. For a given combination $(b, p, m)$, the positive label refers to the case when method $m$ is indeed where the bug $b$ is located (i.e., faulty case), and the negative label is when $m$ is not relevant to $b$ (i.e., non-faulty case). As we deal with binary classification task, it is plausible to assume that a data instance follows Bernoulli distribution, c.f.,~\cite{Murphy12}:
+\begin{align}
+p(x_i, y_i| \theta) &= \sigma(f(x_i, \theta))^{y_i} \left( 1 - \sigma(f(x_i, \theta)) \right)^{(1 - y_i)}
+\end{align}
+
+\noindent where $y_i = 1$ ($y_i = 0$) denotes the positive (negative) label, and $\sigma(x) = \frac{1}{1 + \exp(-x)}$ is the logistic function. Using this notation, we can formulate the overall data \emph{likelihood} as:
+\begin{align}
+\label{eqn:likelihood}
+p(X, y | \theta) &= \prod_{i=1}^N \sigma(f(x_i, \theta))^{y_i} \left( 1 - \sigma(f(x_i, \theta)) \right)^{(1 - y_i)}
+\end{align}
+
+\noindent where $N$ is the total number of data instances (i.e., $(b,p,m)$ combinations), and $y = [y_1,\ldots,y_i,\ldots,y_N]$ is the label vector.
+
+Our primary interest here is to infer the \emph{posterior} probability $p(\theta | X)$, which can be computed via the Bayes' rule:
+\begin{align}
+p(\theta | X, y) &= \frac{p(X, y | \theta) p(\theta)}{p(X, y)}
+\end{align}
+
+\noindent Specifically, our goal is to find an optimal parameter vector $\theta^{*}$ that maximizes the posterior $p(\theta | X, y)$. This leads to the following optimization task:
+\begin{align}
+\label{eqn:MAP}
+\theta^{*} &= \arg \max_{\theta} p(\theta | X, y) \nonumber\\
+&= \arg \max_{\theta} p(X, y | \theta) p(\theta) \nonumber\\
+&= \arg \min_{\theta} \left( -\log(p(X, y | \theta)) - \log(p(\theta)) \right)
+\end{align}
+
+\noindent Here we can drop the denominator $p(X, y)$, since it is independent of the parameters $\theta$. The term $p(\theta)$ refers to the \emph{prior}, which we define to be a Gaussian distribution with (identical) zero mean and inverse variance $\lambda$:
+\begin{align}
+\label{eqn:prior}
+p(\theta) = \prod_{j=1}^J \sqrt{ \frac{\lambda}{2 \pi} } \exp \left( -\frac{\lambda}{2} \theta_j^2 \right)
+\end{align}
+
+\noindent where the number of parameters $J$ is $3$ in our case (i.e., $\alpha$, $\beta$, and $\gamma$).
+
+By substituting (\ref{eqn:likelihood}) and (\ref{eqn:prior}) into (\ref{eqn:MAP}), and by droppping the constant terms that are independent of $\theta$, the optimal parameters $\theta^{*}$ can be computed as:
+\begin{align}
+\theta^{*} &= \arg \min_{\theta} \left( \sum_{i=1}^N \mathcal{L}_i + \frac{\lambda}{2} \sum_{j=1}^J \theta_j^2 \right)
+\end{align}
+
+\noindent where $\mathcal{L}_i$ is called the instance-wise loss, as given by:
+\begin{align}
+\label{eq:instance-wise-loss}
+\mathcal{L}_i = -\left[ y_i \log(\sigma(f(x_i, \theta))) + (1 - y_i) \log(1 - \sigma(f(x_i, \theta))) \right]
+\end{align}
+
+\noindent Solution to this minimization task is known as the \emph{regularized logistic regression}. The regularization term $\frac{\lambda}{2} \sum_{j=1}^J \theta_j^2$--which stems from the prior $p(\theta)$--serves to penalize large parameter values, thereby reducing the risk of data overfitting.
+
+\paragraph{Algorithm} \hspace{0pt} 
+To estimate $\theta^{*}$, we develop an iterative parameter tuning strategy that performs a descent move along the negative gradient of $\mathcal{L}_i$. Algorithm 1 summarizes our proposed parameter tuning method. More specifically, for each instance $i$, we perform gradient descent update for each parameter $\theta_j$:
+\begin{align}
+\theta_j \leftarrow \theta_j - \eta \left( \frac{\partial \mathcal{L}_i}{\partial \theta_j} + \lambda \theta_j \right)
+\end{align}
+
+\noindent where the gradient term $\frac{\partial \mathcal{L}_i}{\partial \theta_j}$ resolves to:
+\begin{align}
+\frac{\partial \mathcal{L}_i}{\partial \theta_j} &= \left( \sigma(f(x_i, \theta)) - y_i \right) x_{i,j}
+\end{align}
+
+\noindent with the feature values $x_{i,1} = \text{AML}^\text{Text}(b,m)$, $x_{i,2} = \text{AML}^\text{Spectra}(p,m)$ and $x_{i,3} = \text{AML}^\text{SuspWord}(b,p,m)$, corresponding to the parameters $\alpha$, $\beta$ and $\gamma$, respectively. The update steps are realized in lines 11-13 of Algorithm 1.
+
+One key challenge in the current bug localization task is the extremely skewed distribution of the labels, i.e., the number of positive cases is much smaller than the number of negative cases. To address this, we devise a \emph{balanced random sampling} procedure when picking a data instance for gradient descent update. In particular, for every update step, we alternatingly select a random instance from the positive and negative instance pools, as per lines 4-8 of Algorithm 1.
+
+\begin{algorithm}[!t]
+\begin{algorithmic}[1]
+\Require Matrix $X \in \mathbb{R}^{N \times 3}$ (each row is a vector $x_i = [\text{AML}^{\text{Text}}(b,m), \text{AML}^{\text{Spectra}}(p,m), \text{AML}^{\text{SuspWord}}(b,p,m)]$ for bug report $b$, program spectra $p$, and method $m$ in one of the top-K most similar training data), label vector $y \in \mathbb{R}^{N}$ (each element $y_i$ is the label of $x_i$), learning rate $\eta$, regularization parameter $\lambda$, maximum training iterations $T_{max}$
+\Ensure Weight parameters $\alpha$, $\beta$, $\gamma$
+\State Initialize $\alpha$, $\beta$, $\gamma$ to zero
+\Repeat
+	\For {each $n \in \{ 1,\ldots,N \}$}
+		\If{$n\bmod{2} = 0$}  \Comment{Draw a positive instance}
+			\State{Randomly pick $i$ from $\{1,\ldots,N\}$ s.t. $y_i = 1$}	
+		\Else \Comment{Draw a negative instance}
+			\State{Randomly pick $i$ from $\{1,\ldots,N\}$ s.t. $y_i = 0$}
+		\EndIf
+		\State Compute overall score $f(x_i, \theta)$ using Eq. (\ref{eqn:composite})
+		\State Compute gradient $g_i \leftarrow \sigma(f(x_i, \theta)) - y_i$
+		\State $\alpha \leftarrow \alpha - \eta \left( g_i \times \text{AML}^{\text{Text}}(b,m) + \lambda \alpha \right) $
+		\State $\beta \leftarrow \beta - \eta \left( g_i \times \text{AML}^{\text{Spectra}}(p,m) + \lambda \beta \right)$
+		\State  $\gamma \leftarrow \gamma - \eta \left( g_i \times \text{AML}^{\text{SuspWord}}(b,p,m) + \lambda \gamma \right)$
+	\EndFor
+\Until $T_{max}$ iterations
+\end{algorithmic}
+\caption{Adaptive multi-modal bug localization}
+\label{alg:adaptive}
+\end{algorithm}
+
+Using this simple method, we can balance the training from positive and negative instances, thus effectively mitigating the issue of {\em skewed distribution} in the localization task. It is also worth noting that our iterative tuning procedure is efficient. That is, its time complexity is linear with respect to the number of instances $N$ and maximum iterations $T_{max}$. %In this work, we use a fixed $T_{max} = 10$. 
